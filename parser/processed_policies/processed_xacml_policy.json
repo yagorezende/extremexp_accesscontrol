@@ -1,0 +1,515 @@
+{
+    "PolicyId": "c6284489-b68c-47de-986c-6bfbd51320e8",
+    "RuleCombiningAlgId": "urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides",
+    "Version": "1.0",
+    "Description": {
+        "Policy Id": "c6284489-b68c-47de-986c-6bfbd51320e8",
+        "Policy Name": "Policy #1",
+        "Description": "Test"
+    },
+    "Target": null,
+    "Rules": [
+        {
+            "RuleId": "0d2c7651-516a-4bf7-b441-75cfbb772e19",
+            "Effect": "Permit",
+            "Description": null,
+            "Target": null,
+            "Condition": {
+                "Apply": {
+                    "FunctionId": "urn:oasis:names:tc:xacml:1.0:function:and",
+                    "Arguments": [
+                        {
+                            "FunctionId": "urn:oasis:names:tc:xacml:3.0:function:string-starts-with",
+                            "Arguments": [
+                                {
+                                    "AttributeValue": {
+                                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                        "Value": "10.0"
+                                    }
+                                },
+                                {
+                                    "FunctionId": "urn:oasis:names:tc:xacml:1.0:function:string-one-and-only",
+                                    "Arguments": [
+                                        {
+                                            "AttributeDesignator": {
+                                                "AttributeId": "xxp:ebbb1098-154b-18df-07b9-5886ef272e62",
+                                                "Category": "urn:eu:extremexp:casm:1.0",
+                                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                                "MustBePresent": "true"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "Obligations": [
+                {
+                    "ObligationId": "TrackingObligation:c6284489-b68c-47de-986c-6bfbd51320e8:0d2c7651-516a-4bf7-b441-75cfbb772e19:permit",
+                    "FulfillOn": "Permit",
+                    "AttributeAssignmentExpressions": [
+                        {
+                            "AttributeId": "maple:obligation:decision",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "PERMIT"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:type",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "Rule"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:id",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "0d2c7651-516a-4bf7-b441-75cfbb772e19"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:name",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "Rule #1"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:parent",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "Policy #1"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "RuleId": "0f75ce36-450f-40ee-9853-11882e1bf111",
+            "Effect": "Permit",
+            "Description": null,
+            "Target": null,
+            "Condition": {
+                "Apply": {
+                    "FunctionId": "urn:oasis:names:tc:xacml:1.0:function:or",
+                    "Arguments": [
+                        {
+                            "FunctionId": "urn:oasis:names:tc:xacml:1.0:function:and",
+                            "Arguments": [
+                                {
+                                    "FunctionId": "urn:oasis:names:tc:xacml:1.0:function:string-equal",
+                                    "Arguments": [
+                                        {
+                                            "FunctionId": "urn:oasis:names:tc:xacml:1.0:function:string-one-and-only",
+                                            "Arguments": [
+                                                {
+                                                    "AttributeDesignator": {
+                                                        "AttributeId": "device-type",
+                                                        "Category": "urn:oasis:names:tc:xacml:3.0:attribute-category:environment",
+                                                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                                        "MustBePresent": "true"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "AttributeValue": {
+                                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                                "Value": "Mobile"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "FunctionId": "urn:oasis:names:tc:xacml:1.0:function:and",
+                            "Arguments": [
+                                {
+                                    "FunctionId": "urn:oasis:names:tc:xacml:3.0:function:string-starts-with",
+                                    "Arguments": [
+                                        {
+                                            "AttributeValue": {
+                                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                                "Value": "172.10"
+                                            }
+                                        },
+                                        {
+                                            "FunctionId": "urn:oasis:names:tc:xacml:1.0:function:string-one-and-only",
+                                            "Arguments": [
+                                                {
+                                                    "AttributeDesignator": {
+                                                        "AttributeId": "xxp:9a499795-82e0-4f6e-a1b3-6d4494ad7ba4",
+                                                        "Category": "urn:eu:extremexp:casm:1.0",
+                                                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                                        "MustBePresent": "true"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "FunctionId": "urn:oasis:names:tc:xacml:1.0:function:and",
+                            "Arguments": [
+                                {
+                                    "FunctionId": "urn:oasis:names:tc:xacml:1.0:function:string-equal",
+                                    "Arguments": [
+                                        {
+                                            "FunctionId": "urn:oasis:names:tc:xacml:1.0:function:string-one-and-only",
+                                            "Arguments": [
+                                                {
+                                                    "AttributeDesignator": {
+                                                        "AttributeId": "pcm:b7674280-8c34-0e9f-a247-ed92ec522b52",
+                                                        "Category": "urn:eu:extremexp:casm:1.0",
+                                                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                                        "MustBePresent": "true"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "AttributeValue": {
+                                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                                "Value": "Activeeon"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "FunctionId": "urn:oasis:names:tc:xacml:1.0:function:and",
+                            "Arguments": [
+                                {
+                                    "FunctionId": "urn:oasis:names:tc:xacml:1.0:function:string-equal",
+                                    "Arguments": [
+                                        {
+                                            "FunctionId": "urn:oasis:names:tc:xacml:1.0:function:string-one-and-only",
+                                            "Arguments": [
+                                                {
+                                                    "AttributeDesignator": {
+                                                        "AttributeId": "pcm:e148f112-6aab-479e-7f34-625031ee263a",
+                                                        "Category": "urn:eu:extremexp:casm:1.0",
+                                                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                                        "MustBePresent": "true"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "AttributeValue": {
+                                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                                "Value": "Monday"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "FunctionId": "urn:oasis:names:tc:xacml:1.0:function:and",
+                                    "Arguments": [
+                                        {
+                                            "FunctionId": "urn:oasis:names:tc:xacml:1.0:function:string-equal",
+                                            "Arguments": [
+                                                {
+                                                    "FunctionId": "urn:oasis:names:tc:xacml:1.0:function:string-one-and-only",
+                                                    "Arguments": [
+                                                        {
+                                                            "AttributeDesignator": {
+                                                                "AttributeId": "pcm:ed7267e8-3aa5-3479-8e15-3b2758290ed4",
+                                                                "Category": "urn:eu:extremexp:casm:1.0",
+                                                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                                                "MustBePresent": "true"
+                                                            }
+                                                        }
+                                                    ]
+                                                },
+                                                {
+                                                    "AttributeValue": {
+                                                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                                        "Value": "Friday"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "Obligations": [
+                {
+                    "ObligationId": "TrackingObligation:c6284489-b68c-47de-986c-6bfbd51320e8:0f75ce36-450f-40ee-9853-11882e1bf111:permit",
+                    "FulfillOn": "Permit",
+                    "AttributeAssignmentExpressions": [
+                        {
+                            "AttributeId": "maple:obligation:decision",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "PERMIT"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:type",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "Rule"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:id",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "0f75ce36-450f-40ee-9853-11882e1bf111"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:name",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "Rule #2"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:parent",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "Policy #1"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "RuleId": "5423300d-e0ef-4c50-afa3-adef4242138f",
+            "Effect": "Permit",
+            "Description": null,
+            "Target": null,
+            "Condition": {
+                "Apply": {
+                    "FunctionId": "urn:oasis:names:tc:xacml:1.0:function:and",
+                    "Arguments": [
+                        {
+                            "FunctionId": "urn:oasis:names:tc:xacml:3.0:function:string-ends-with",
+                            "Arguments": [
+                                {
+                                    "FunctionId": "urn:oasis:names:tc:xacml:1.0:function:string-normalize-to-lower-case",
+                                    "Arguments": [
+                                        {
+                                            "AttributeValue": {
+                                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                                "Value": ".gr"
+                                            }
+                                        }
+                                    ]
+                                },
+                                {
+                                    "FunctionId": "urn:oasis:names:tc:xacml:1.0:function:string-normalize-to-lower-case",
+                                    "Arguments": [
+                                        {
+                                            "FunctionId": "urn:oasis:names:tc:xacml:1.0:function:string-one-and-only",
+                                            "Arguments": [
+                                                {
+                                                    "AttributeDesignator": {
+                                                        "AttributeId": "xxp:3a3c76c7-9300-078f-6ebb-4767b7352561",
+                                                        "Category": "urn:eu:extremexp:casm:1.0",
+                                                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                                        "MustBePresent": "true"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "Obligations": [
+                {
+                    "ObligationId": "TrackingObligation:c6284489-b68c-47de-986c-6bfbd51320e8:5423300d-e0ef-4c50-afa3-adef4242138f:permit",
+                    "FulfillOn": "Permit",
+                    "AttributeAssignmentExpressions": [
+                        {
+                            "AttributeId": "maple:obligation:decision",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "PERMIT"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:type",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "Rule"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:id",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "5423300d-e0ef-4c50-afa3-adef4242138f"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:name",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "Rule #3"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:parent",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "Policy #1"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "RuleId": "757865c5-96ba-4d4a-9a1a-1e4f880f8a0d",
+            "Effect": "Deny",
+            "Description": null,
+            "Target": null,
+            "Condition": null,
+            "Obligations": [
+                {
+                    "ObligationId": "TrackingObligation:c6284489-b68c-47de-986c-6bfbd51320e8:757865c5-96ba-4d4a-9a1a-1e4f880f8a0d:deny",
+                    "FulfillOn": "Deny",
+                    "AttributeAssignmentExpressions": [
+                        {
+                            "AttributeId": "maple:obligation:decision",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "DENY"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:type",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "Rule"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:id",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "757865c5-96ba-4d4a-9a1a-1e4f880f8a0d"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:name",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "Default Rule"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:parent",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "Policy #1"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "Obligations": [
+        {
+            "ObligationId": "TrackingObligation:c6284489-b68c-47de-986c-6bfbd51320e8:permit",
+            "FulfillOn": "Permit",
+            "AttributeAssignmentExpressions": [
+                {
+                    "AttributeId": "maple:obligation:decision",
+                    "Value": {
+                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                        "Value": "PERMIT"
+                    }
+                },
+                {
+                    "AttributeId": "maple:obligation:type",
+                    "Value": {
+                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                        "Value": "Policy"
+                    }
+                },
+                {
+                    "AttributeId": "maple:obligation:id",
+                    "Value": {
+                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                        "Value": "c6284489-b68c-47de-986c-6bfbd51320e8"
+                    }
+                },
+                {
+                    "AttributeId": "maple:obligation:name",
+                    "Value": {
+                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                        "Value": "Policy #1"
+                    }
+                }
+            ]
+        },
+        {
+            "ObligationId": "TrackingObligation:c6284489-b68c-47de-986c-6bfbd51320e8:deny",
+            "FulfillOn": "Deny",
+            "AttributeAssignmentExpressions": [
+                {
+                    "AttributeId": "maple:obligation:decision",
+                    "Value": {
+                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                        "Value": "DENY"
+                    }
+                },
+                {
+                    "AttributeId": "maple:obligation:type",
+                    "Value": {
+                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                        "Value": "Policy"
+                    }
+                },
+                {
+                    "AttributeId": "maple:obligation:id",
+                    "Value": {
+                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                        "Value": "c6284489-b68c-47de-986c-6bfbd51320e8"
+                    }
+                },
+                {
+                    "AttributeId": "maple:obligation:name",
+                    "Value": {
+                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                        "Value": "Policy #1"
+                    }
+                }
+            ]
+        }
+    ],
+    "Evaluation": {
+        "AppliedRules": [
+            {
+                "RuleId": "757865c5-96ba-4d4a-9a1a-1e4f880f8a0d",
+                "Effect": "Deny",
+                "ConditionResult": true
+            }
+        ],
+        "Decision": "Deny"
+    },
+    "AccessDecision": "Deny"
+}
