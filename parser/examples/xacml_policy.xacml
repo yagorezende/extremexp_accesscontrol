@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xacml3:Policy 
+    xmlns:xacml3="urn:oasis:names:tc:xacml:3.0:core:schema:wd-17" 
+    PolicyId="c6284489-b68c-47de-986c-6bfbd51320e8" 
+    RuleCombiningAlgId="urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides" 
+    Version="1.0">
+
+    <xacml3:Description><![CDATA[
+            Policy Id:   c6284489-b68c-47de-986c-6bfbd51320e8
+            Policy Name: Policy #1
+            Description: Test
+    ]]></xacml3:Description>
+
+    <xacml3:Target />
+
+    <!-- Rule Name: Rule #1    
+     Description: fsgsdf
+ -->
+    <xacml3:Rule Effect="Permit" RuleId="0d2c7651-516a-4bf7-b441-75cfbb772e19">
+        <xacml3:Condition>
+            <!-- COMPOSITE EXPRESSION - START:  operator: AND -->
+            <xacml3:Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+                <!-- SIMPLE EXPRESSION - START:  attribute=NetworkLocation, property=hasSubnet, operator=STARTS_WITH, value=10.0 -->
+                <xacml3:Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:string-starts-with">
+                    <xacml3:AttributeValue
+                    	DataType="http://www.w3.org/2001/XMLSchema#string">10.0</xacml3:AttributeValue>
+                    <xacml3:Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                        <xacml3:AttributeDesignator
+                        	AttributeId="xxp:ebbb1098-154b-18df-07b9-5886ef272e62"
+                        	Category="urn:eu:extremexp:casm:1.0"
+                        	DataType="http://www.w3.org/2001/XMLSchema#string"
+                        	MustBePresent="true"
+                        />
+                    </xacml3:Apply>
+                </xacml3:Apply>
+                <!-- SIMPLE EXPRESSION - END -->
+            </xacml3:Apply>
+            <!-- COMPOSITE EXPRESSION - END:  operator: AND -->
+        </xacml3:Condition>
+        <!-- Rule Obligations -->
+        <xacml3:ObligationExpressions>
+            <ObligationExpression ObligationId="TrackingObligation:c6284489-b68c-47de-986c-6bfbd51320e8:0d2c7651-516a-4bf7-b441-75cfbb772e19:permit" FulfillOn="Permit">
+                <AttributeAssignmentExpression AttributeId="maple:obligation:decision">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">PERMIT</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="maple:obligation:type">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Rule</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="maple:obligation:id">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0d2c7651-516a-4bf7-b441-75cfbb772e19</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="maple:obligation:name">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Rule #1</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="maple:obligation:parent">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Policy #1</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+            </ObligationExpression>
+        </xacml3:ObligationExpressions>
+    </xacml3:Rule>
+
+    <!-- Rule Name: Rule #2    
+     Description: check location and time of access request
+ -->
+    <xacml3:Rule Effect="Permit" RuleId="0f75ce36-450f-40ee-9853-11882e1bf111">
+        <xacml3:Condition>
+            <!-- COMPOSITE EXPRESSION - START:  operator: OR -->
+            <xacml3:Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:or">
+                <!-- COMPOSITE EXPRESSION - START:  operator: AND -->
+                <xacml3:Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+                    <!-- SIMPLE EXPRESSION - START:  attribute=RequestNetworkLocation, property=deviceType, operator=EQUALS, value=Mobile -->
+                    <xacml3:Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                        <xacml3:Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                            <xacml3:AttributeDesignator
+                            	AttributeId="device-type"
+                            	Category="urn:oasis:names:tc:xacml:3.0:attribute-category:environment"
+                            	DataType="http://www.w3.org/2001/XMLSchema#string"
+                            	MustBePresent="true"
+                            />
+                        </xacml3:Apply>
+                        <xacml3:AttributeValue
+                        	DataType="http://www.w3.org/2001/XMLSchema#string">Mobile</xacml3:AttributeValue>
+                    </xacml3:Apply>
+                    <!-- SIMPLE EXPRESSION - END -->
+                </xacml3:Apply>
+                <!-- COMPOSITE EXPRESSION - END:  operator: AND -->
+                <!-- COMPOSITE EXPRESSION - START:  operator: AND -->
+                <xacml3:Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+                    <!-- SIMPLE EXPRESSION - START:  attribute=NetworkLocation, property=hasIPAddress, operator=STARTS_WITH, value=172.10 -->
+                    <xacml3:Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:string-starts-with">
+                        <xacml3:AttributeValue
+                        	DataType="http://www.w3.org/2001/XMLSchema#string">172.10</xacml3:AttributeValue>
+                        <xacml3:Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                            <xacml3:AttributeDesignator
+                            	AttributeId="xxp:9a499795-82e0-4f6e-a1b3-6d4494ad7ba4"
+                            	Category="urn:eu:extremexp:casm:1.0"
+                            	DataType="http://www.w3.org/2001/XMLSchema#string"
+                            	MustBePresent="true"
+                            />
+                        </xacml3:Apply>
+                    </xacml3:Apply>
+                    <!-- SIMPLE EXPRESSION - END -->
+                </xacml3:Apply>
+                <!-- COMPOSITE EXPRESSION - END:  operator: AND -->
+                <!-- COMPOSITE EXPRESSION - START:  operator: AND -->
+                <xacml3:Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+                    <!-- SIMPLE EXPRESSION - START:  attribute=AbstractLocation, property=hasName, operator=EQUALS, value=Activeeon -->
+                    <xacml3:Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                        <xacml3:Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                            <xacml3:AttributeDesignator
+                            	AttributeId="pcm:b7674280-8c34-0e9f-a247-ed92ec522b52"
+                            	Category="urn:eu:extremexp:casm:1.0"
+                            	DataType="http://www.w3.org/2001/XMLSchema#string"
+                            	MustBePresent="true"
+                            />
+                        </xacml3:Apply>
+                        <xacml3:AttributeValue
+                        	DataType="http://www.w3.org/2001/XMLSchema#string">Activeeon</xacml3:AttributeValue>
+                    </xacml3:Apply>
+                    <!-- SIMPLE EXPRESSION - END -->
+                </xacml3:Apply>
+                <!-- COMPOSITE EXPRESSION - END:  operator: AND -->
+                <!-- COMPOSITE EXPRESSION - START:  operator: AND -->
+                <xacml3:Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+                    <!-- SIMPLE EXPRESSION - START:  attribute=DateTimeInterval, property=hasBeginningDay, operator=EQUALS, value=Monday -->
+                    <xacml3:Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                        <xacml3:Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                            <xacml3:AttributeDesignator
+                            	AttributeId="pcm:e148f112-6aab-479e-7f34-625031ee263a"
+                            	Category="urn:eu:extremexp:casm:1.0"
+                            	DataType="http://www.w3.org/2001/XMLSchema#string"
+                            	MustBePresent="true"
+                            />
+                        </xacml3:Apply>
+                        <xacml3:AttributeValue
+                        	DataType="http://www.w3.org/2001/XMLSchema#string">Monday</xacml3:AttributeValue>
+                    </xacml3:Apply>
+                    <!-- SIMPLE EXPRESSION - END -->
+                    <!-- COMPOSITE EXPRESSION - START:  operator: AND -->
+                    <xacml3:Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+                        <!-- SIMPLE EXPRESSION - START:  attribute=DateTimeInterval, property=hasEndDay, operator=EQUALS, value=Friday -->
+                        <xacml3:Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-equal">
+                            <xacml3:Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                                <xacml3:AttributeDesignator
+                                	AttributeId="pcm:ed7267e8-3aa5-3479-8e15-3b2758290ed4"
+                                	Category="urn:eu:extremexp:casm:1.0"
+                                	DataType="http://www.w3.org/2001/XMLSchema#string"
+                                	MustBePresent="true"
+                                />
+                            </xacml3:Apply>
+                            <xacml3:AttributeValue
+                            	DataType="http://www.w3.org/2001/XMLSchema#string">Friday</xacml3:AttributeValue>
+                        </xacml3:Apply>
+                        <!-- SIMPLE EXPRESSION - END -->
+                    </xacml3:Apply>
+                    <!-- COMPOSITE EXPRESSION - END:  operator: AND -->
+                </xacml3:Apply>
+                <!-- COMPOSITE EXPRESSION - END:  operator: AND -->
+            </xacml3:Apply>
+            <!-- COMPOSITE EXPRESSION - END:  operator: OR -->
+        </xacml3:Condition>
+        <!-- Rule Obligations -->
+        <xacml3:ObligationExpressions>
+            <ObligationExpression ObligationId="TrackingObligation:c6284489-b68c-47de-986c-6bfbd51320e8:0f75ce36-450f-40ee-9853-11882e1bf111:permit" FulfillOn="Permit">
+                <AttributeAssignmentExpression AttributeId="maple:obligation:decision">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">PERMIT</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="maple:obligation:type">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Rule</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="maple:obligation:id">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">0f75ce36-450f-40ee-9853-11882e1bf111</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="maple:obligation:name">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Rule #2</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="maple:obligation:parent">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Policy #1</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+            </ObligationExpression>
+        </xacml3:ObligationExpressions>
+    </xacml3:Rule>
+
+    <!-- Rule Name: Rule #3 -->
+    <xacml3:Rule Effect="Permit" RuleId="5423300d-e0ef-4c50-afa3-adef4242138f">
+        <xacml3:Condition>
+            <!-- COMPOSITE EXPRESSION - START:  operator: AND -->
+            <xacml3:Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:and">
+                <!-- SIMPLE EXPRESSION - START:  attribute=NetworkLocation, property=hasDomain, operator=ENDS_WITH_CI, value=.gr -->
+                <xacml3:Apply FunctionId="urn:oasis:names:tc:xacml:3.0:function:string-ends-with">
+                    <xacml3:Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-normalize-to-lower-case">
+                        <xacml3:AttributeValue
+                        	DataType="http://www.w3.org/2001/XMLSchema#string">.gr</xacml3:AttributeValue>
+                    </xacml3:Apply>
+                    <xacml3:Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-normalize-to-lower-case">
+                        <xacml3:Apply FunctionId="urn:oasis:names:tc:xacml:1.0:function:string-one-and-only">
+                            <xacml3:AttributeDesignator
+                            	AttributeId="xxp:3a3c76c7-9300-078f-6ebb-4767b7352561"
+                            	Category="urn:eu:extremexp:casm:1.0"
+                            	DataType="http://www.w3.org/2001/XMLSchema#string"
+                            	MustBePresent="true"
+                            />
+                        </xacml3:Apply>
+                    </xacml3:Apply>
+                </xacml3:Apply>
+                <!-- SIMPLE EXPRESSION - END -->
+            </xacml3:Apply>
+            <!-- COMPOSITE EXPRESSION - END:  operator: AND -->
+        </xacml3:Condition>
+        <!-- Rule Obligations -->
+        <xacml3:ObligationExpressions>
+            <ObligationExpression ObligationId="TrackingObligation:c6284489-b68c-47de-986c-6bfbd51320e8:5423300d-e0ef-4c50-afa3-adef4242138f:permit" FulfillOn="Permit">
+                <AttributeAssignmentExpression AttributeId="maple:obligation:decision">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">PERMIT</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="maple:obligation:type">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Rule</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="maple:obligation:id">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">5423300d-e0ef-4c50-afa3-adef4242138f</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="maple:obligation:name">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Rule #3</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="maple:obligation:parent">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Policy #1</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+            </ObligationExpression>
+        </xacml3:ObligationExpressions>
+    </xacml3:Rule>
+
+    <!-- Rule Name: Default Rule -->
+    <xacml3:Rule Effect="Deny" RuleId="757865c5-96ba-4d4a-9a1a-1e4f880f8a0d">
+        <!-- Rule Obligations -->
+        <xacml3:ObligationExpressions>
+            <ObligationExpression ObligationId="TrackingObligation:c6284489-b68c-47de-986c-6bfbd51320e8:757865c5-96ba-4d4a-9a1a-1e4f880f8a0d:deny" FulfillOn="Deny">
+                <AttributeAssignmentExpression AttributeId="maple:obligation:decision">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">DENY</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="maple:obligation:type">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Rule</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="maple:obligation:id">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">757865c5-96ba-4d4a-9a1a-1e4f880f8a0d</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="maple:obligation:name">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Default Rule</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="maple:obligation:parent">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Policy #1</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+            </ObligationExpression>
+        </xacml3:ObligationExpressions>
+    </xacml3:Rule>
+
+    <!-- Policy Obligations -->
+    <xacml3:ObligationExpressions>
+        <ObligationExpression ObligationId="TrackingObligation:c6284489-b68c-47de-986c-6bfbd51320e8:permit" FulfillOn="Permit">
+                <AttributeAssignmentExpression AttributeId="maple:obligation:decision">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">PERMIT</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="maple:obligation:type">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Policy</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="maple:obligation:id">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">c6284489-b68c-47de-986c-6bfbd51320e8</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="maple:obligation:name">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Policy #1</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+        </ObligationExpression>
+        <ObligationExpression ObligationId="TrackingObligation:c6284489-b68c-47de-986c-6bfbd51320e8:deny" FulfillOn="Deny">
+                <AttributeAssignmentExpression AttributeId="maple:obligation:decision">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">DENY</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="maple:obligation:type">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Policy</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="maple:obligation:id">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">c6284489-b68c-47de-986c-6bfbd51320e8</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+                <AttributeAssignmentExpression AttributeId="maple:obligation:name">
+                    <xacml3:AttributeValue DataType="http://www.w3.org/2001/XMLSchema#string">Policy #1</xacml3:AttributeValue>
+                </AttributeAssignmentExpression>
+        </ObligationExpression>
+    </xacml3:ObligationExpressions>
+</xacml3:Policy>
