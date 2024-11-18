@@ -1,0 +1,224 @@
+{
+    "PolicyId": "a738f3b9-a5c8-4e25-8a27-9fb54f7c0b9a",
+    "RuleCombiningAlgId": "urn:oasis:names:tc:xacml:3.0:rule-combining-algorithm:permit-overrides",
+    "Version": "1.0",
+    "Description": {
+        "Policy Id": "a738f3b9-a5c8-4e25-8a27-9fb54f7c0b9a",
+        "Policy Name": "Policy #2",
+        "Description": "Test Policy 2"
+    },
+    "Target": null,
+    "Rules": [
+        {
+            "RuleId": "b12345e7-89d0-4f32-b94a-678def12345b",
+            "Effect": "Permit",
+            "Description": null,
+            "Target": null,
+            "Condition": {
+                "Apply": {
+                    "FunctionId": "urn:oasis:names:tc:xacml:1.0:function:and",
+                    "Arguments": [
+                        {
+                            "FunctionId": "urn:oasis:names:tc:xacml:3.0:function:string-starts-with",
+                            "Arguments": [
+                                {
+                                    "AttributeValue": {
+                                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                        "Value": "192.168"
+                                    }
+                                },
+                                {
+                                    "FunctionId": "urn:oasis:names:tc:xacml:1.0:function:string-one-and-only",
+                                    "Arguments": [
+                                        {
+                                            "AttributeDesignator": {
+                                                "AttributeId": "xxp:abcd1234-5678-9101-1121-314151617181",
+                                                "Category": "urn:eu:extremexp:casm:1.0",
+                                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                                "MustBePresent": "true"
+                                            }
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }
+            },
+            "Obligations": [
+                {
+                    "ObligationId": "TrackingObligation:a738f3b9-a5c8-4e25-8a27-9fb54f7c0b9a:b12345e7-89d0-4f32-b94a-678def12345b:permit",
+                    "FulfillOn": "Permit",
+                    "AttributeAssignmentExpressions": [
+                        {
+                            "AttributeId": "maple:obligation:decision",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "PERMIT"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:type",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "Rule"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:id",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "b12345e7-89d0-4f32-b94a-678def12345b"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:name",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "Rule #1"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:parent",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "Policy #2"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "RuleId": "f23456d7-89d0-4f32-b94a-678def23456c",
+            "Effect": "Deny",
+            "Description": null,
+            "Target": null,
+            "Condition": null,
+            "Obligations": [
+                {
+                    "ObligationId": "TrackingObligation:a738f3b9-a5c8-4e25-8a27-9fb54f7c0b9a:f23456d7-89d0-4f32-b94a-678def23456c:deny",
+                    "FulfillOn": "Deny",
+                    "AttributeAssignmentExpressions": [
+                        {
+                            "AttributeId": "maple:obligation:decision",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "DENY"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:type",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "Rule"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:id",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "f23456d7-89d0-4f32-b94a-678def23456c"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:name",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "Default Deny"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:parent",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "Policy #2"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "Obligations": [
+        {
+            "ObligationId": "TrackingObligation:a738f3b9-a5c8-4e25-8a27-9fb54f7c0b9a:permit",
+            "FulfillOn": "Permit",
+            "AttributeAssignmentExpressions": [
+                {
+                    "AttributeId": "maple:obligation:decision",
+                    "Value": {
+                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                        "Value": "PERMIT"
+                    }
+                },
+                {
+                    "AttributeId": "maple:obligation:type",
+                    "Value": {
+                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                        "Value": "Policy"
+                    }
+                },
+                {
+                    "AttributeId": "maple:obligation:id",
+                    "Value": {
+                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                        "Value": "a738f3b9-a5c8-4e25-8a27-9fb54f7c0b9a"
+                    }
+                },
+                {
+                    "AttributeId": "maple:obligation:name",
+                    "Value": {
+                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                        "Value": "Policy #2"
+                    }
+                }
+            ]
+        },
+        {
+            "ObligationId": "TrackingObligation:a738f3b9-a5c8-4e25-8a27-9fb54f7c0b9a:deny",
+            "FulfillOn": "Deny",
+            "AttributeAssignmentExpressions": [
+                {
+                    "AttributeId": "maple:obligation:decision",
+                    "Value": {
+                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                        "Value": "DENY"
+                    }
+                },
+                {
+                    "AttributeId": "maple:obligation:type",
+                    "Value": {
+                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                        "Value": "Policy"
+                    }
+                },
+                {
+                    "AttributeId": "maple:obligation:id",
+                    "Value": {
+                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                        "Value": "a738f3b9-a5c8-4e25-8a27-9fb54f7c0b9a"
+                    }
+                },
+                {
+                    "AttributeId": "maple:obligation:name",
+                    "Value": {
+                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                        "Value": "Policy #2"
+                    }
+                }
+            ]
+        }
+    ],
+    "Evaluation": {
+        "AppliedRules": [
+            {
+                "RuleId": "f23456d7-89d0-4f32-b94a-678def23456c",
+                "Effect": "Deny",
+                "ConditionResult": true
+            }
+        ],
+        "Decision": "Deny"
+    },
+    "AccessDecision": "Deny"
+}

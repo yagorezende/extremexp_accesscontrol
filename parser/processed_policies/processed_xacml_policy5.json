@@ -1,0 +1,104 @@
+{
+    "PolicyId": "permit-policy-1234",
+    "RuleCombiningAlgId": "urn:oasis:names:tc:xacml:1.0:rule-combining-algorithm:first-applicable",
+    "Version": "1.0",
+    "Description": {
+        "Policy Id": "permit-policy-1234",
+        "Policy Name": "Always Permit Policy"
+    },
+    "Target": null,
+    "Rules": [
+        {
+            "RuleId": "permit-rule-1234",
+            "Effect": "Permit",
+            "Description": null,
+            "Target": null,
+            "Condition": null,
+            "Obligations": [
+                {
+                    "ObligationId": "TrackingObligation:permit-policy-1234:permit",
+                    "FulfillOn": "Permit",
+                    "AttributeAssignmentExpressions": [
+                        {
+                            "AttributeId": "maple:obligation:decision",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "PERMIT"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:type",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "Rule"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:id",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "permit-rule-1234"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:name",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "Always Permit Rule"
+                            }
+                        },
+                        {
+                            "AttributeId": "maple:obligation:parent",
+                            "Value": {
+                                "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                                "Value": "Always Permit Policy"
+                            }
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
+    "Obligations": [
+        {
+            "ObligationId": "TrackingObligation:permit-policy-1234:permit",
+            "FulfillOn": "Permit",
+            "AttributeAssignmentExpressions": [
+                {
+                    "AttributeId": "maple:obligation:decision",
+                    "Value": {
+                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                        "Value": "PERMIT"
+                    }
+                },
+                {
+                    "AttributeId": "maple:obligation:type",
+                    "Value": {
+                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                        "Value": "Policy"
+                    }
+                },
+                {
+                    "AttributeId": "maple:obligation:id",
+                    "Value": {
+                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                        "Value": "permit-policy-1234"
+                    }
+                },
+                {
+                    "AttributeId": "maple:obligation:name",
+                    "Value": {
+                        "DataType": "http://www.w3.org/2001/XMLSchema#string",
+                        "Value": "Always Permit Policy"
+                    }
+                }
+            ]
+        }
+    ],
+    "Evaluation": {
+        "AppliedRuleId": "permit-rule-1234",
+        "Decision": "Permit",
+        "ConditionResult": true
+    },
+    "AccessDecision": "Permit"
+}
