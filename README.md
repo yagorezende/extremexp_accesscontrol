@@ -19,7 +19,7 @@ The code is only for the translator backend. The frontend can be anything that s
 
 ## Development Progress
 #### Overall progress: 
-![](https://geps.dev/progress/14)
+![](https://geps.dev/progress/28)
 
 #### Tasks:
 - [x] Project Basic Structure (Flask API + Endpoints + kickoff script)
