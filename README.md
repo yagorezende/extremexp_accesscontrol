@@ -28,7 +28,7 @@ The code is only for the translator backend. The frontend can be anything that s
 - [ ] Translate the PolicyGraph to a Solidity Smart Contract (Solidity Policy Builder module)
 - [ ] Deploy the Smart Contract and retrieve the address (Blockchain Interface module)
 - [ ] Register the Policy address to the database (Policy Address DB)
-- [ ] Integrate with the Keycloak Authorization Server (OAuth or MetaMask)
+- [x] Integrate with the Keycloak Authorization Server (OAuth or MetaMask)
 
 ## Getting Started
 ```bash
