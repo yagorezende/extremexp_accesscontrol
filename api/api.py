@@ -11,7 +11,6 @@ policy_model = api.model('Policy', PolicyDAO.structure)
 DAO = PolicyDAO()
 
 @api.route("/")
-# @oidc.accept_token(require_token=True, scopes_required=['openid'])
 class TranslatorEndpointsList(Resource):
     @api.doc('list_policies')
     @api.marshal_list_with(policy_model)
