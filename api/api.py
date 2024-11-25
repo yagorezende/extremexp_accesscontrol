@@ -1,11 +1,10 @@
-import json
 import logging
 
 from flask_restx import Namespace, Resource
-
 from models.models import PolicyDAO
+from middleware import decorators
 
-api = Namespace('Translator', description='ExtremeXP Translator Endpoints')
+api: Namespace = Namespace('Translator', description='ExtremeXP Translator Endpoints')
 
 policy_model = api.model('Policy', PolicyDAO.structure)
 
@@ -15,6 +14,7 @@ DAO = PolicyDAO()
 class TranslatorEndpointsList(Resource):
     @api.doc('list_policies')
     @api.marshal_list_with(policy_model)
+    @decorators.require_token(require_token=True, scopes_required=['openid'])
     def get(self):
         """
         List all policies
