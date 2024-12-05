@@ -12,12 +12,13 @@
 This project translates XACML policies to Solidity smart contracts.
 The project is based on the [XACML](https://www.oasis-open.org/committees/xacml/) standard 
 and the [Solidity](https://soliditylang.org/) programming language.
----
+
 ## Project Architecture
-The code is only for the translator backend. The frontend can be anything that sends a POST request with the XACML policy to the backend as a JSON.
+The code is only for the translator's backend. The frontend can be anything that sends a POST request with the XACML policy to the backend as a JSON.
+
 ![Project Architecture](./docs/ExtremeXP-Translator.png "Project Architecture")
 
----
+
 ## Getting Started
 ```bash
 # install the project development environment
@@ -26,9 +27,9 @@ make install
 make run
 ```
 The server will be running on http://localhost:5521.
-The Swagger documentation is available in the root page.
+The Swagger documentation is available on the root page.
 
----
+
 ## Development Progress
 #### Overall progress: 
 ![](https://geps.dev/progress/42)
@@ -44,8 +45,8 @@ The Swagger documentation is available in the root page.
 
 
 ## Future Discussion
-This project developed the Keycloak Middleware, referred to as Auth Middleware in the image,
-as an internal module. In the future, this module should be accessible to other ExtremeXP modules,
+This project developed the Keycloak Middleware as an internal module, referred to as Auth Middleware in the image. 
+In the future, this module should be accessible to other ExtremeXP modules, 
 especially those supporting the [Graphical Editor's](https://github.com/ExtremeXP-VU/ExtremeXP-graphical-editor) backend. There are two options to achieve this:
 
 1. **Integrate into the same project**: Incorporate the translator project as one of the [Graphical Editor's](https://github.com/ExtremeXP-VU/ExtremeXP-graphical-editor) backends. This makes the module locally accessible and simplifies integration.  
