@@ -1,4 +1,4 @@
-# ExtremeXP Policy Translator
+# ExtremeXP Policy Access Control
 ![ExtremeXP](https://img.shields.io/badge/ExtremeXP-121011?style=for-the-badge&logo=extremexp&logoColor=black)
 ![Python](https://img.shields.io/badge/python-121011?style=for-the-badge&logo=python&logoColor=ffdd54)
 ![Flask](https://img.shields.io/badge/flask-%23121011.svg?style=for-the-badge&logo=flask&logoColor=white)
@@ -9,12 +9,18 @@
 ![Metamask](https://img.shields.io/badge/metamask-121011?style=for-the-badge&logo=metamask&logoColor=white)
 ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)
 
-This project translates XACML policies to Solidity smart contracts.
-The project is based on the [XACML](https://www.oasis-open.org/committees/xacml/) standard 
+This project provides an interface for the ExtremeXP Access Control module,
+enabling the translation of XACML policies into Solidity smart contracts.
+The module's key responsibilities include:
+
+- Acting as the backend for the ExtremeXP security layer.  
+- Translating XACML policies into Solidity smart contracts.  
+- Deploying the generated smart contracts onto the blockchain.  
+
+> Note: The translator project is based on the [XACML](https://www.oasis-open.org/committees/xacml/) standard 
 and the [Solidity](https://soliditylang.org/) programming language.
 
 ## Project Architecture
-The code is only for the translator's backend. The frontend can be anything that sends a POST request with the XACML policy to the backend as a JSON.
 
 ![Project Architecture](./docs/ExtremeXP-Translator.png "Project Architecture")
 
@@ -32,7 +38,7 @@ The Swagger documentation is available on the root page.
 
 ## Development Progress
 #### Overall progress: 
-![](https://geps.dev/progress/42)
+![](https://geps.dev/progress/33)
 
 #### Tasks:
 - [x] Project Basic Structure (Flask API + Endpoints + kickoff script)
@@ -40,18 +46,7 @@ The Swagger documentation is available on the root page.
 - [ ] Map the XACML basic functions over the PolicyGraph (See: https://en.wikipedia.org/wiki/XACML#Functions)
 - [ ] Translate the PolicyGraph to a Solidity Smart Contract (Solidity Policy Builder module)
 - [x] Deploy the Smart Contract and retrieve the address (Blockchain Interface module)
-- [ ] Register the Policy address to the database (Policy Address DB)
+- [ ] Register the Policy address to some database (Policy Address DB)
 - [x] Integrate with the Keycloak Authorization Server (OAuth or MetaMask)
-
-
-## Future Discussion
-This project developed the Keycloak Middleware as an internal module, referred to as Auth Middleware in the image. 
-In the future, this module should be accessible to other ExtremeXP modules, 
-especially those supporting the [Graphical Editor's](https://github.com/ExtremeXP-VU/ExtremeXP-graphical-editor) backend. There are two options to achieve this:
-
-1. **Integrate into the same project**: Incorporate the translator project as one of the [Graphical Editor's](https://github.com/ExtremeXP-VU/ExtremeXP-graphical-editor) backends. This makes the module locally accessible and simplifies integration.  
-2. **Create a standalone project**: Separate the Auth Middleware into its repository, convert it into a library, and make it installable via pip.
-
-### Hints: 
-1. [Using Git Submodule or Subtree](https://stackoverflow.com/questions/36554810/how-to-link-folder-from-a-git-repo-to-another-repo)
-2. [Creating a Python Library](https://medium.com/analytics-vidhya/how-to-create-a-python-library-7d5aea80cc3f)
+- [ ] Integrate with the [ExtremeXP Portal](https://github.com/ExtremeXP-VU/ExtremeXP-portal)
+- [ ] Add the Smart Contracts used for the ABAC module in the project for documentation purposes
