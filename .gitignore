@@ -7,4 +7,6 @@
 .vscode
 **/__pycache__
 **/*.pyc
-contracts
+contracts/*.abi
+contracts/*.bin
+contracts/*.sol
