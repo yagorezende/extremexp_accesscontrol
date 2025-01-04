@@ -1,11 +1,11 @@
 import os
-from flask import Flask, Blueprint
-from flask_restx import Api
-
-from api.api import api as translator_ns
-from middleware.middleware import KeycloakMiddleware
 
 from dotenv import load_dotenv
+from flask import Flask, Blueprint
+from flask_restx import Api
+from werkzeug.middleware.proxy_fix import ProxyFix
+
+from api.api import api as translator_ns
 
 load_dotenv()
 
@@ -25,7 +25,8 @@ with app.app_context():
     app.config['OIDC_RP_CLIENT_SECRET'] = os.getenv('OIDC_RP_CLIENT_SECRET')
     app.config['OIDC_RP_SIGN_ALGO'] = os.getenv('OIDC_RP_SIGN_ALGO')
 
-    app.wsgi_app = KeycloakMiddleware(app)
+    # app.wsgi_app = KeycloakMiddleware(app)
+    app.wsgi_app = ProxyFix(app.wsgi_app)
 blueprint = Blueprint('api', __name__)
 app.register_blueprint(blueprint)
 

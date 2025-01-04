@@ -8,8 +8,8 @@ load_dotenv()
 
 if __name__ == '__main__':
     app.run(
-        host=os.getenv('FLASK_APP_HOST'),
-        port=int(os.getenv('FLASK_APP_PORT')),
-        debug=os.getenv('FLASK_APP_DEBUG'),
+        host=os.getenv('FLASK_AC_APP_HOST'),
+        port=int(os.getenv('FLASK_AC_APP_PORT')),
+        debug=os.getenv('FLASK_AC_APP_DEBUG'),
         threaded=True
     )
