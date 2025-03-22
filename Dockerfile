@@ -7,15 +7,16 @@ COPY requirements.txt /app
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip3 install -r requirements.txt
 
-COPY ./api /app/api
-COPY ./blockchain_interface /app/blockchain_interface
-COPY ./contracts /app/contracts
-COPY ./middleware /app/middleware
-COPY ./models /app/models
-COPY ./parser /app/parser
-COPY ./policy_builder /app/policy_builder
-COPY ./structure_builder /app/structure_builder
-COPY ./app.py /app/app.py
+COPY api /app/api
+COPY blockchain_interface /app/blockchain_interface
+COPY contracts /app/contracts
+COPY keycloak_interface /app/keycloak_interface
+COPY models /app/models
+COPY parser /app/parser
+COPY person /app/person
+COPY policy_builder /app/policy_builder
+COPY structure_builder /app/structure_builder
+COPY app.py /app
 
 EXPOSE $FLASK_AC_APP_PORT
 
