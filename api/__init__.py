@@ -12,7 +12,7 @@ cors = CORS(app,
             ) # allow CORS for all domains on all routes.
 # app.config['CORS_HEADERS'] = 'Content-Type'
 
-blueprint = Blueprint('api', __name__)
+blueprint = Blueprint('api', __name__, static_url_path='/extreme_auth')
 app.register_blueprint(blueprint)
 
 authorizations = {
@@ -28,9 +28,11 @@ authorizations = {
     }
 }
 api = Api(app,
-          title='Flask ExtremeXP App',
+          title='Access Control ExtremeXP App',
           version='1.0',
-          description='Experiments with python flask', prefix='/extreme_auth',
+          description='Access Control API for ExtremeXP App',
+          doc='/extreme_auth',
+          prefix='/extreme_auth',
           authorizations=authorizations)
 
 
