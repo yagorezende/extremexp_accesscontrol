@@ -1,10 +1,8 @@
 import os
-
-from api import app
+from api import app, settings
 from dotenv import load_dotenv
 
 load_dotenv()
-
 
 if __name__ == '__main__':
     app.run(
@@ -13,3 +11,13 @@ if __name__ == '__main__':
         debug=os.getenv('FLASK_AC_APP_DEBUG'),
         threaded=True
     )
+
+    with app.app_context():
+        print("App context is created")
+        # read all constants from settings
+        for key, value in settings.__dict__.items():
+            print(f'{key}: {value}')
+            if key.isupper():
+                app.config[key] = value
+
+    print("App is running")

@@ -1,12 +1,19 @@
+import json
+from typing import Tuple
+
 import requests
 import logging
 
 from requests import HTTPError
 
+from keycloak_interface.utils.functions import get_or_create_keycloak_user
+
 LOGGER = logging.getLogger(__name__)
 
 
-class KeycloakConnect:
+class KeycloakInterface:
+    RESOURCES_CACHE = []
+
     def __init__(self, server_url, realm_name, client_id, client_secret_key=None):
         """Create Keycloak Instance.
 
@@ -40,6 +47,12 @@ class KeycloakConnect:
                 + self.realm_name
                 + "/.well-known/openid-configuration"
         )
+        self.token_endpoint = (
+                self.server_url
+                + "/realms/"
+                + self.realm_name
+                + "/protocol/openid-connect/token"
+        )
         self.token_introspection_endpoint = (
                 self.server_url
                 + "/realms/"
@@ -54,7 +67,7 @@ class KeycloakConnect:
         )
 
     @staticmethod
-    def _send_request(method, url, **kwargs):
+    def _send_request(method, url, **kwargs) -> Tuple[dict, int]:
         """Send request by method and url.
          Raises HTTPError exceptions if status >= 400
 
@@ -62,8 +75,34 @@ class KeycloakConnect:
              json: Response body
          """
         response = requests.request(method, url, **kwargs)
-        response.raise_for_status()
-        return response.json()
+        return response.json(), response.status_code
+
+    def authenticate(self, username, password, raise_exception=False) -> Tuple[dict, int]:
+        """
+        Authenticate user on Keycloak
+
+        Args:
+            username (str): The username of the user.
+            password (str): The password of the user.
+            raise_exception: Raise exception if the request ended with a status >= 400.
+
+        Returns:
+            dict: The response of the authentication.
+        """
+        payload = {
+            "client_id": self.client_id,
+            "client_secret": self.client_secret_key,
+            "grant_type": "password",
+            "scope": "openid profile email",
+            "username": username,
+            "password": password,
+        }
+
+        logging.error(f"{payload}")
+
+        headers = {"content-type": "application/x-www-form-urlencoded"}
+
+        return self._send_request('POST', self.token_endpoint, data=payload, headers=headers)
 
     def well_known(self, raise_exception=True):
         """Lists endpoints and other configuration options
@@ -76,7 +115,7 @@ class KeycloakConnect:
             [type]: [list of keycloak endpoints]
         """
         try:
-            response = self._send_request("GET", self.well_known_endpoint)
+            response, status_code = self._send_request("GET", self.well_known_endpoint)
         except HTTPError as ex:
             LOGGER.error(
                 "Error obtaining list of endpoints from endpoint: "
@@ -86,6 +125,20 @@ class KeycloakConnect:
                 raise
             return {}
         return response
+
+    def get_jwt_from_token(self, token):
+        introspect_token = self.introspect(token)
+        return {
+            "access_token": token,
+            "expires_in": 36000,
+            "refresh_expires_in": 36000,
+            "refresh_token": token,
+            "token_type": "Bearer",
+            "id_token": token,
+            "not-before-policy": 0,
+            "session_state": introspect_token.get("session_state", ""),
+            "scope": introspect_token.get("scope", ""),
+        }
 
     def introspect(self, token, token_type_hint=None, raise_exception=True):
         """
@@ -125,7 +178,7 @@ class KeycloakConnect:
             "authorization": "Bearer " + token,
         }
         try:
-            response = self._send_request(
+            response, status_code = self._send_request(
                 "POST", self.token_introspection_endpoint, data=payload, headers=headers)
         except HTTPError as ex:
             LOGGER.error(
@@ -146,11 +199,14 @@ class KeycloakConnect:
             raise_exception: Raise exception if the request ended with a status >= 400.
 
         Returns:
-            bollean: Token valid (True) or invalid (False)
+            boolean: Token valid (True) or invalid (False)
         """
+
         introspect_token = self.introspect(token, raise_exception)
+        # print(f"Introspect token: {introspect_token}")
         is_active = introspect_token.get("active", None)
-        return True if is_active else False
+        # print(f"Token is active: {is_active}")
+        return is_active is not None
 
     def roles_from_token(self, token, raise_exception=True):
         """
@@ -198,7 +254,7 @@ class KeycloakConnect:
         """
         headers = {"authorization": "Bearer " + token}
         try:
-            response = self._send_request(
+            response, status_code = self._send_request(
                 "GET", self.userinfo_endpoint, headers=headers)
         except HTTPError as ex:
             LOGGER.error(
@@ -209,67 +265,12 @@ class KeycloakConnect:
             if raise_exception:
                 raise
             return {}
-        return response
+        return response, status_code
 
-    def get_resource_ticket(self, context_token, uri, scope):
-        payload = [
-            {
-                "resource_id": uri,
-                "resource_scopes": [
-                    scope
-                ]
-            }
-        ]
+    def create_user(self, username: str, password: str, email: str, name: str):
+        user, created = get_or_create_keycloak_user(username, email, name, password, None)
+        if created:
+            return user, 201
+        return user, 200
 
-        headers = {
-            "Content-Type": "application/json",
-            "Authorization": "Bearer " + context_token
-        }
 
-        try:
-            response = requests.post(
-                f"{self.server_url}/realms/{self.realm_name}/authz/protection/permission",
-                json=payload,
-                headers=headers,
-            )
-
-            if response.status_code == 201:
-                return response.json()["ticket"]
-        except Exception as e:
-            pass
-        return None
-
-    def get_pat_token(self, access_token, uri, scope):
-        payload = {
-            "grant_type": "urn:ietf:params:oauth:grant-type:uma-ticket",
-            "audience": self.client_id,
-            "permission": f"{uri}#{scope}",
-        }
-        headers = {
-            "content-type": "application/x-www-form-urlencoded",
-            "authorization": "Bearer " + access_token,
-        }
-
-        print(payload)
-
-        try:
-            response = requests.post(
-                f"{self.server_url}/realms/{self.realm_name}/protocol/openid-connect/token",
-                data=payload,
-                headers=headers,
-            )
-            if response.status_code == 200:
-                return response.json()["access_token"]
-        except Exception as e:
-            pass
-        return None
-
-    def has_context_access(self, token, uri, scope):
-        context_token = self.get_pat_token(token, uri, scope)
-        print("Got context token", context_token)
-        if context_token is not None:
-            resource_ticket = self.get_resource_ticket(context_token, uri, scope)
-            print("Got resource ticket ->", resource_ticket)
-            return resource_ticket is not None
-        else:
-            return False
