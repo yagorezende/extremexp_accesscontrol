@@ -28,3 +28,9 @@ services:
     command: python app.py
     volumes:
       - .:/app
+    networks:
+      - xp-network
+
+networks:
+  xp-network:
+    driver: bridge
