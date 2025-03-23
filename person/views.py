@@ -23,7 +23,10 @@ keycloak_interface = KeycloakInterface(
 
 @api.route("/login")
 class PersonLoginView(Resource):
-    @api.doc('login')
+    @api.doc('login', params={
+        'username': 'Username',
+        'password': 'Password'
+    })
     def post(self):
         # get username and password
         username = api.payload['username']
@@ -35,13 +38,10 @@ class PersonLoginView(Resource):
         except HTTPError as e:
             return {'error': str(e)}, 401
 
-    # def options(self):
-    #     return {'Allow': 'POST'}, 200, {'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'POST'}
-
 
 @api.route("/userinfo")
 class PersonInfoView(Resource):
-    @api.doc('userinfo')
+    @api.doc('userinfo', security='bearerAuth')
     def get(self):
         try:
             token = request.headers.get('Authorization')
@@ -54,14 +54,19 @@ class PersonInfoView(Resource):
             return response, status_code
         except KeycloakACError as e:
             return {'error': str(e)}, e.error_code
+        except MissingTokenError as e:
+            return {'error': e.message}, 401
 
-    # def options(self):
-    #     return {'Allow': 'GET'}, 200, {'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'GET'}
 
 
 @api.route("/register")
 class PersonLoginView(Resource):
-    @api.doc('register')
+    @api.doc('register', params={
+        'username': 'Username',
+        'password': 'Password',
+        'email': 'Email',
+        'name': 'User Full Name'
+    })
     def post(self):
         # get username and password
         username = api.payload['username']
@@ -79,6 +84,3 @@ class PersonLoginView(Resource):
             return response, status_code
         except HTTPError as e:
             return {'error': str(e)}, 401
-
-    # def options(self):
-    #     return {'Allow': 'POST'}, 200, {'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Methods': 'POST'}
