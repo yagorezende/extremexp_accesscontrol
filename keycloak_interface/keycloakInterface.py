@@ -268,9 +268,11 @@ class KeycloakInterface:
         return response, status_code
 
     def create_user(self, username: str, password: str, email: str, name: str):
-        user, created = get_or_create_keycloak_user(username, email, name, password, None)
-        if created:
-            return user, 201
-        return user, 200
-
-
+        try:
+            user, created = get_or_create_keycloak_user(username, email, name, password, None)
+            if created:
+                return user, 201
+            return user, 200
+        except Exception as e:
+            return {"error": "Internal Server Error",
+                    "error_description": "Unable to create user. Please check the date and try again."}, 500

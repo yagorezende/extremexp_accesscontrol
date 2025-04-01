@@ -1,6 +1,6 @@
 from flask import Flask, Blueprint
 from flask_cors import CORS
-from flask_restx import Api
+from flask_restx import Api, apidoc
 
 from api.api import api as translator_ns
 from person.views import api as person_ns
@@ -12,7 +12,12 @@ cors = CORS(app,
             ) # allow CORS for all domains on all routes.
 # app.config['CORS_HEADERS'] = 'Content-Type'
 
-blueprint = Blueprint('api', __name__, static_url_path='/extreme_auth')
+blueprint = Blueprint('api', __name__,
+                      static_url_path='/extreme_auth/swaggerui',
+                      url_prefix='/extreme_auth',
+                      root_path='/extreme_auth')
+
+apidoc.static_url_path = "/extreme_auth/swaggerui"
 app.register_blueprint(blueprint)
 
 authorizations = {
