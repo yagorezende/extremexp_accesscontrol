@@ -4,6 +4,9 @@ from keycloak_interface.utils.handlers import KeycloakHandler, KeyCloakRootConne
 def get_keycloak_user(username):
     return KeyCloakRootConnection().get_keycloak_user_id(username)
 
+def get_keycloak_user_by_email(email):
+    return KeyCloakRootConnection().get_keycloak_user_by_email(email)
+
 
 def get_keycloak_user_roles(user_id):
     roles = [role['name'] for role in KeyCloakRootConnection().get_user_role(user_id)]
