@@ -1,9 +1,8 @@
 name: CD prod 🚀
 run-name: Continuous Delivery to PROD environment 🚥
 on:
-  push:
-    tags:
-      - "v*"
+  release:
+    types: [published]
 jobs:
   ci:
     name: ci prod
@@ -15,21 +14,33 @@ jobs:
     name: Build
     needs: ci
     runs-on: ubuntu-22.04
+
+    permissions:
+      contents: read
+      packages: write
+
     steps:
-      - name: Get tag # This is not used for now, we use tag from cd-prod.yaml or cd-dev.yaml workflows
-        id: repository
-        run: echo "tag=$(git describe --tags HEAD)" > $GITHUB_ENV
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Build
+
+      - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
+          context: .
           push: true
-          tags: ghcr.io/${{ github.repository }}:latest
+          tags: |
+            ghcr.io/${{ github.repository }}:${{ github.event.release.tag_name }}
+            ghcr.io/${{ github.repository }}:latest
 
   deploy:
     name: Deploy to production 🚀
