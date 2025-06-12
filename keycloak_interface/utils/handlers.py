@@ -44,6 +44,13 @@ class KeycloakHandler:
     def set_user_role(self, user_id, role):
         self.keycloak_admin.assign_realm_roles(user_id, role)
 
+    def get_keycloak_user_by_email(self, email):
+        try:
+            users = self.keycloak_admin.get_users(query={"email": email, "max": 1, "exact": True})
+            return users[0] if len(users) == 1 else None
+        except Exception as e:
+            return None
+
     def get_keycloak_user(self, username):
         try:
             return self.keycloak_admin.get_user(self.keycloak_admin.get_user_id(username))

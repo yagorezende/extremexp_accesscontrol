@@ -1,10 +1,14 @@
+import json
+
 from flask import request
 from flask_restx import Namespace, Resource
+from keycloak import KeycloakPutError
 from requests import HTTPError
 
 from api import settings
 from keycloak_interface.errors import KeycloakACError, MissingTokenError
 from keycloak_interface.keycloakInterface import KeycloakInterface
+from keycloak_interface.utils.functions import get_keycloak_user, get_keycloak_user_by_email
 from models.models import PersonDAO
 
 api: Namespace = Namespace('Person', description='ExtremeXP Person Endpoints')
@@ -34,6 +38,15 @@ class PersonLoginView(Resource):
 
         try:
             response, status_code = keycloak_interface.authenticate(username, password)
+
+            if status_code != 200:
+                if get_keycloak_user(username) is not None:
+                    response["error_description"] = f"Invalid password"
+                    response["error_code"] = 4011
+                else:
+                    response["error_description"] = f"User not found"
+                    response["error_code"] = 4012
+
             return response, status_code
         except HTTPError as e:
             return {'error': str(e)}, 401
@@ -60,7 +73,7 @@ class PersonInfoView(Resource):
 
 
 @api.route("/register")
-class PersonLoginView(Resource):
+class PersonRegisterView(Resource):
     @api.doc('register', params={
         'username': 'Username',
         'password': 'Password',
@@ -81,6 +94,37 @@ class PersonLoginView(Resource):
                 email,
                 name
             )
+
+            if status_code != 201:
+                response = {"error": "Register conflict"}
+                status_code = 409
+                if get_keycloak_user(username) is not None:
+                    response["error_description"] = "Username already registered"
+                    response["error_code"] = 4091
+                elif get_keycloak_user_by_email(email) is not None:
+                    response["error_description"] = "Email already registered"
+                    response["error_code"] = 4092
             return response, status_code
-        except HTTPError as e:
-            return {'error': str(e)}, 401
+        except Exception as e:
+            return {'error': "Internal server error", "error_description": str(e), "error_code": 500}, 500
+
+
+@api.route("/user/<string:uuid>")
+class PersonView(Resource):
+    @api.doc('get_person', params={'uuid': 'UUID of the person'})
+    def get(self, uuid):
+        try:
+            token = request.headers.get('Authorization')
+            if not token or not token.startswith('Bearer '):
+                raise MissingTokenError()
+            else:
+                token = token.split(' ')[1]
+            response, status_code = keycloak_interface.userinfo(token)
+
+
+
+            return response, status_code
+        except KeycloakACError as e:
+            return {'error': str(e)}, e.error_code
+        except MissingTokenError as e:
+            return {'error': e.message}, 401
