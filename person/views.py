@@ -107,3 +107,24 @@ class PersonRegisterView(Resource):
             return response, status_code
         except Exception as e:
             return {'error': "Internal server error", "error_description": str(e), "error_code": 500}, 500
+
+
+@api.route("/user/<string:uuid>")
+class PersonView(Resource):
+    @api.doc('get_person', params={'uuid': 'UUID of the person'})
+    def get(self, uuid):
+        try:
+            token = request.headers.get('Authorization')
+            if not token or not token.startswith('Bearer '):
+                raise MissingTokenError()
+            else:
+                token = token.split(' ')[1]
+            response, status_code = keycloak_interface.userinfo(token)
+
+
+
+            return response, status_code
+        except KeycloakACError as e:
+            return {'error': str(e)}, e.error_code
+        except MissingTokenError as e:
+            return {'error': e.message}, 401
