@@ -9,6 +9,9 @@ run:
 run-docker:
 	docker-compose up --build
 
+bootstrap:
+	bash bootstrap.sh
+
 destroy:
 	rm -rf .venv
 	rm -rf __pycache__

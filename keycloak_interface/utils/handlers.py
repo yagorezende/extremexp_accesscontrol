@@ -1,3 +1,5 @@
+from typing import List
+
 from keycloak import KeycloakAdmin
 from keycloak import KeycloakOpenIDConnection
 
@@ -28,9 +30,57 @@ class KeycloakHandler:
         roles = self.keycloak_admin.get_realm_roles()
         to_dict = {}
         for role in roles:
-            if role['description'] == '${role_b2blue-roles}':
+            if role['description'] == '${role_extreme-xp}':
                 to_dict[role['name']] = role
         return to_dict
+
+    def create_realm_role(self, name) -> str | None:
+        """
+        Create a role in Keycloak.
+        :param name: the name of the role to create (must be unique)
+        :return: keycloak role id or None if the role already exists
+        """
+        try:
+            return self.keycloak_admin.create_realm_role({"name": name, "description": "${role_extreme-xp}"})
+        except Exception as e:
+            raise Exception(f"Error creating role: {str(e)}")
+
+    def get_realm_groups(self) -> List:
+        return self.keycloak_admin.get_groups()
+
+    def create_group(self, group_name) -> str | None:
+        """
+        Create a group in Keycloak.
+        :param group_name: the name of the group to create (must be unique)
+        :return: keycloak group id or None if the group already exists
+        """
+        try:
+            return self.keycloak_admin.create_group({"name": group_name})
+        except Exception as e:
+            raise Exception(f"Error creating group: {str(e)}")
+
+    def get_group(self, group_name) -> dict | None:
+        """
+        Get a group by name in Keycloak.
+        :param group_name: the name of the group to retrieve
+        :return: keycloak group id or None if the group does not exist
+        """
+        try:
+            groups = self.keycloak_admin.get_groups(query={"search": group_name, "max": 1, "exact": True})
+            return groups[0] if len(groups) == 1 else None
+        except Exception as e:
+            raise Exception(f"Error retrieving group: {str(e)}")
+
+    def set_user_group(self, user_id, group_id):
+        """
+        Assign a user to a group in Keycloak.
+        :param user_id: the ID of the user to assign
+        :param group_id: the ID of the group to assign the user to
+        """
+        try:
+            self.keycloak_admin.group_user_add(user_id, group_id)
+        except Exception as e:
+            raise Exception(f"Error assigning user to group: {str(e)}")
 
     def get_realm_role(self, role_name):
         return self.keycloak_admin.get_realm_role(role_name)
@@ -51,6 +101,28 @@ class KeycloakHandler:
         except Exception as e:
             return None
 
+    def get_keycloak_user_list(self, query=None):
+        """
+        Get a list of users from Keycloak.
+        :param query: optional query parameters to filter users
+        :return: list of users
+        """
+        try:
+            return self.keycloak_admin.get_users(query=query)
+        except Exception as e:
+            raise Exception(f"Error retrieving user list: {str(e)}")
+
+    def get_keycloak_user_list_count(self, query=None) -> int:
+        """
+        Get the count of users in Keycloak.
+        :return: count of users
+        """
+        try:
+            return self.keycloak_admin.users_count(query)
+        except Exception as e:
+            raise Exception(f"Error retrieving user count: {str(e)}")
+
+
     def get_keycloak_user(self, username):
         try:
             return self.keycloak_admin.get_user(self.keycloak_admin.get_user_id(username))
@@ -59,6 +131,17 @@ class KeycloakHandler:
 
     def get_keycloak_user_id(self, username):
         return self.keycloak_admin.get_user_id(username)
+
+    def set_user_attributes(self, user_id, attributes):
+        """
+        Set user attributes in Keycloak.
+        :param user_id: the ID of the user to update
+        :param attributes: a dictionary of attributes to set
+        """
+        try:
+            self.keycloak_admin.update_user(user_id, {"attributes": attributes})
+        except Exception as e:
+            raise Exception(f"Error setting user attributes: {str(e)}")
 
     def create_keycloak_user(self, data):
         try:
@@ -70,7 +153,11 @@ class KeycloakHandler:
                 "lastName": ' '.join(x for x in data['name'].split(' ')[1::]),
                 "emailVerified": True,
                 "attributes": {
-                    "locale": ["en"]
+                    "locale": ["en"],
+                    "userPublicKey": ["N/A"],
+                    "userWalletAddress": ["N/A"],
+                    "userLocationLat": ["0.0"],
+                    "userLocationLong": ["0.0"],
                 }
             })
         except Exception as e:

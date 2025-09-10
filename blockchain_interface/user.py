@@ -1,4 +1,4 @@
-import sys
+import argparse
 from time import sleep
 
 from web3 import Web3, HTTPProvider
@@ -62,28 +62,3 @@ class BlockchainUser:
         signed_tx = self.web3.eth.account.sign_transaction(tx, self.account_private_key)
         tx_hash = self.web3.eth.send_raw_transaction(signed_tx.raw_transaction)
         return tx_hash
-
-
-if __name__ == '__main__':
-    user_pk = sys.argv[1]
-
-    # Example usage
-    blockchain_user = BlockchainUser('http://localhost:8555')
-    address, private_key = blockchain_user.create_account()
-    print(f"Address: {address}")
-    print(f"Private Key: {private_key}")
-
-    default_user = BlockchainUser('http://localhost:8555')
-    default_user.load_account(user_pk)
-    print(f"Default User Address: {default_user.account_address}")
-    transaction = default_user.transfer_to(address, 1)
-    print(f"Transaction Hash: {transaction}")
-    print("Waiting for transaction to be mined...")
-    while True:
-        sleep(1)
-        tx_receipt = blockchain_user.web3.eth.get_transaction_receipt(transaction)
-        if tx_receipt is not None:
-            print(f"Transaction mined: {tx_receipt}")
-            break
-
-    print(f"New User Balance: {blockchain_user.get_balance()}")

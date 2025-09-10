@@ -7,7 +7,7 @@ from web3.middleware import ExtraDataToPOAMiddleware
 
 from errors import SolidityCompilationError, SolidityDeploymentError
 
-_solc_version = "0.8.17"
+_solc_version = "0.8.20"
 solcx.install_solc(_solc_version)
 solcx.set_solc_version(_solc_version)
 

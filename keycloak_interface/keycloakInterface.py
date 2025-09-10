@@ -1,9 +1,8 @@
 import json
+import logging
 from typing import Tuple
 
 import requests
-import logging
-
 from requests import HTTPError
 
 from keycloak_interface.utils.functions import get_or_create_keycloak_user
@@ -207,6 +206,28 @@ class KeycloakInterface:
         is_active = introspect_token.get("active", None)
         # print(f"Token is active: {is_active}")
         return is_active is not None
+
+    def validate_request_token(self, token, assert_group=None, raise_exception=True) -> bool:
+        """
+        Validate request token
+
+        Args:
+            token (str): The string value of the token.
+            assert_group (str, optional): The group to assert for the token.
+            raise_exception: Raise exception if the request ended with a status >= 400.
+
+        Returns:
+            bool: True if the token is valid and belongs to the specified group, False otherwise.
+        """
+        introspect_token = self.introspect(token, raise_exception)
+        if not introspect_token.get("active", False):
+            return False
+
+        if assert_group:
+            groups = introspect_token.get("groups", [])
+            return assert_group in groups
+        return True
+
 
     def roles_from_token(self, token, raise_exception=True):
         """
