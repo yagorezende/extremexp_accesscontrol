@@ -43,7 +43,10 @@ class PolicyInformationPoint(SmartContract):
         :param role: str - the role to set
         :return: transaction hash
         """
-        return self.call_write_function("setUserRoleAttribute", user, role)
+
+        user_hex = self.evm_interface.web3.to_checksum_address(user)
+
+        return self.call_write_function("setUserRoleAttribute", user_hex, role)
 
     def get_user_role_attribute(self, user: str):
         """
@@ -51,7 +54,10 @@ class PolicyInformationPoint(SmartContract):
         :param user: str - the address of the user
         :return: role
         """
-        return self.call_read_function("getUserRoleAttribute", user)
+
+        user_hex = self.evm_interface.web3.to_checksum_address(user)
+
+        return self.call_read_function("getUserRoleAttribute", user_hex)
 
     def add_resource(self, uri: str, contentHash: str):
         """
@@ -99,7 +105,9 @@ class PolicyInformationPoint(SmartContract):
         :return: None
         """
 
-        return self.call_write_function("grantOnBehalfOfToken", organisation)
+        organisation_hex = self.evm_interface.web3.to_checksum_address(organisation)
+
+        return self.call_write_function("grantOnBehalfOfToken", organisation_hex)
 
     def organisation_has_access(self, user: str, organisation: str) -> bool:
         """
@@ -113,10 +121,13 @@ class PolicyInformationPoint(SmartContract):
         organisation_hex = self.evm_interface.web3.to_checksum_address(organisation)
         return self.call_read_function("organisationHasAccess", user_hex, organisation_hex)
 
-    def revoke_access(self, user):
+    def revoke_access(self, user: str):
         """
         Revoke access for an organisation.
         :param user: the wallet address of the user to revoke access from
         :return: None
         """
-        return self.call_write_function("revokeAccess", user)
+
+        user_hex = self.evm_interface.web3.to_checksum_address(user)
+
+        return self.call_write_function("revokeAccess", user_hex)

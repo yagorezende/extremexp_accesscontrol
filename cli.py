@@ -64,6 +64,9 @@ class AccessControlCLI:
         self.deployer.load_from_evm_interface(self.blockchain_interface)
         self.is_blockchain_wallet_loaded = True
 
+        print(f"Wallet loaded for account: {self.blockchain_interface.account_address}")
+
+
     def create_account(self) -> tuple:
         """
         Create a new blockchain account.
@@ -201,6 +204,12 @@ class AccessControlCLI:
         pip_interface.grant_on_behalf_of_token(self.blockchain_interface.account_address)
         pip_interface.evm_interface = self.blockchain_interface
 
+        # Add user attributes
+        pip_interface.add_group_to_user(test_user.account_address, "admin")
+        pip_interface.set_user_role_attribute(test_user.account_address, "admin")
+
+        # Save the resource hash
+        pip_interface.add_resource("resource_1", "hash_123")
 
         if not validate_policy_evaluation(pdp_interface, test_user):
             raise Exception("Policy evaluation test failed.")
