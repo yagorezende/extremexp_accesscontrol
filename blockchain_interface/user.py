@@ -4,24 +4,41 @@ from time import sleep
 from web3 import Web3, HTTPProvider
 from web3.middleware import ExtraDataToPOAMiddleware
 
+from blockchain_interface.interfaces.EVMInterface import EVMInterface
+
 
 class BlockchainUser:
     def __init__(self, blockchain_address: str, gas_limit: int = 4100000):
         self.web3 = Web3(HTTPProvider(blockchain_address))
         self.web3.middleware_onion.inject(ExtraDataToPOAMiddleware, layer=0)
         self.gas_limit = gas_limit
+        self.evm_interface = None
         self.account_private_key = None
         self.account_address = None
+
+    def load_from_evm_interface(self, evm_interface: EVMInterface):
+        """
+        Loads account details from an existing EVMInterface instance.
+        :param evm_interface: EVMInterface - the EVMInterface instance to load from
+        :return: BlockchainUser - self
+        """
+        self.evm_interface = evm_interface
+        self.web3 = evm_interface.web3
+        self.gas_limit = evm_interface.gas_limit
+        self.account_private_key = evm_interface.account_private_key
+        self.account_address = evm_interface.account_address
+        return self
 
     def load_account(self, account_pk: str):
         """
         Loads an account to the Web3 instance.
         :param account_pk: str - the private key of the account
+        :return: BlockchainUser - self
         """
         self.web3.eth.default_account = self.web3.eth.account.from_key(account_pk)
         self.account_private_key = account_pk
         self.account_address = self.web3.eth.account.from_key(account_pk).address
-        return self.account_address
+        return self
 
     def create_account(self):
         """

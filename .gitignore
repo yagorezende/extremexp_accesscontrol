@@ -1,5 +1,6 @@
 .venv
 .env
+.env.prod
 .idea/**
 .idea
 .idea/
@@ -9,4 +10,4 @@
 **/*.pyc
 contracts/*.abi
 contracts/*.bin
-contracts/*.sol
+contracts/.sol

@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.18;
 
 
 contract PolicyInformationPoint {
@@ -28,15 +28,15 @@ contract PolicyInformationPoint {
 
     // Function to grant access for 24 hours from now (Executed by the User)
     function grantOnBehalfOfToken(address organisation) public {
+        UserAttributes storage attrs = userAttributes[msg.sender];
         uint256 expiresAt = block.timestamp + DURATION;
-        userAttributes[msg.sender].onBehalfOfToken[organisation]  = expiresAt;
+        attrs.onBehalfOfToken[organisation]  = expiresAt;
         emit AccessGranted(organisation, expiresAt);
     }
 
     // Function to check if access is still valid for the issuer
-    function organisationHasAccess(address user) public view returns (bool) {
-        require(userAttributes[user].onBehalfOfToken[msg.sender] != 0, "Not authorized or token missing");
-        return block.timestamp <= userAttributes[user].onBehalfOfToken[msg.sender];
+    function organisationHasAccess(address user, address organisation) public view returns (bool) {
+        return userAttributes[user].onBehalfOfToken[organisation] != 0 && block.timestamp <= userAttributes[user].onBehalfOfToken[organisation];
     }
 
     // Optional: revoke access early
@@ -61,7 +61,6 @@ contract PolicyInformationPoint {
 
     // here is where we check if the organisation has access to the user attributes
     function getUserGroups(address user) public view returns (string[] memory){
-        require(organisationHasAccess(user), "Organisation is not authorized");
         return userAttributes[user].groups;
     }
 
@@ -87,11 +86,12 @@ contract PolicyInformationPoint {
     /// @notice Get the user role attribute
     function getUserRoleAttribute(address user) public view returns (string memory role) {
         if (bytes(userAttributes[user].role).length != 0) return userAttributes[user].role;
-        return "";
+        return "default-role";
     }
 
     function addResource(string memory uri, string memory contentHash) public{
         ResourceAttributes storage attr = resourceAttributes[uri];
+        attr.owner = msg.sender;
         attr.uri = uri;
         attr.contentHash = contentHash;
         attr.createdAt = block.timestamp;

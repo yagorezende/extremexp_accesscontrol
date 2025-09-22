@@ -2,7 +2,7 @@
 
 # This script is used to bootstrap the environment for the project.
 source .venv/bin/activate
-source .env
+source .env.prod
 
 echo "Bootstrapping the environment..."
 echo "Creating Blockchain User..."

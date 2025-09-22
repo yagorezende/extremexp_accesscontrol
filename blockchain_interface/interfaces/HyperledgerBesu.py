@@ -8,12 +8,11 @@ from blockchain_interface.interfaces.EVMInterface import EVMInterface
 
 class HyperledgerBesu(EVMInterface):
     BLOCKCHAIN = "Hyperledger Besu"
-    GAS_LIMIT = 4100000  # Default gas limit for transactions
+    DEFAULT_GAS_LIMIT = 4100000  # Default gas limit for transactions
 
-    def __init__(self, blockchain_address: str, gas_limit: int = GAS_LIMIT):
-        super().__init__(self.BLOCKCHAIN)
+    def __init__(self, blockchain_address: str, gas_limit: int = DEFAULT_GAS_LIMIT):
+        super().__init__(blockchain_address, self.BLOCKCHAIN)
         # Initialize any specific attributes or configurations for Hyperledger Besu
-        self.web3 = Web3(HTTPProvider(blockchain_address))
         self.web3.middleware_onion.inject(ExtraDataToPOAMiddleware, layer=0)
         self.gas_limit = gas_limit
 
