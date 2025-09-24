@@ -181,20 +181,27 @@ def validate_resource_policy_management(pap_interface: PolicyAdministrationPoint
     return True
 
 
-def validate_policy_evaluation(pdp_interface: PolicyDecisionPoint, test_user: BlockchainUser) -> bool:
+def validate_policy_evaluation(pdp_interface: PolicyDecisionPoint, pip_interface: PolicyInformationPoint, test_user: BlockchainUser) -> bool:
     """
     Validate the policy evaluation functionality.
     :param pdp_interface: the SmartContract instance of the PDP contract
+    :param pip_interface: the SmartContract instance of the PIP contract
     :param test_user: the BlockchainUser instance representing the user making the request
     :return: Bool - True if the test passed, False otherwise
     """
 
-    pip_address = pdp_interface.get_pip()
-    pap_address = pdp_interface.get_pap()
+    # Add on behalf of permission for test user again
+    keep_evm_interface = pip_interface.evm_interface
+    pip_interface.evm_interface = test_user.evm_interface
+    pip_interface.grant_on_behalf_of_token(pdp_interface.evm_interface.account_address)
+    pip_interface.evm_interface = keep_evm_interface
 
-    print(f"Pip address: {pip_address}")
-    print(f"Pap address: {pap_address}")
+    # Add user attributes
+    pip_interface.add_group_to_user(test_user.account_address, "admin")
+    pip_interface.set_user_role_attribute(test_user.account_address, "admin")
 
+    # Save the resource hash
+    pip_interface.add_resource("resource_1", "hash_123")
 
     # Evaluate a valid access request
     access_granted = pdp_interface.evaluate_request(
@@ -208,5 +215,44 @@ def validate_policy_evaluation(pdp_interface: PolicyDecisionPoint, test_user: Bl
     )
 
     print(f"Access granted for valid request: {access_granted}")
+    if not access_granted:
+        print("Access denied for valid request.")
+        return False
 
+    # Evaluate an invalid access request (should be denied)
+    print("Testing user out of location scenario.")
+    access_granted = pdp_interface.evaluate_request(
+        test_user.account_address,
+        "johndoe@tudelft.nl",
+        "127.0.0.1",
+        "read:data",
+        51999279,
+        5377257,
+        "resource_1"
+    )
+
+    print(f"Access granted for invalid request: {access_granted}")
+    if access_granted:
+        print("Access granted for invalid request.")
+        return False
+
+    print(f"Testing user without required role scenario.")
+    # Remove admin role attribute
+    pip_interface.set_user_role_attribute(test_user.account_address, "user")
+    access_granted = pdp_interface.evaluate_request(
+        test_user.account_address,
+        "johndoe@tudelft.nl",
+        "127.0.0.1",
+        "read:data",
+        51999279,
+        4377257,
+        "resource_1"
+    )
+
+    print(f"Access granted for user without required role: {access_granted}")
+    if access_granted:
+        print("Access granted for user without required role.")
+        return False
+
+    print("Test passed: Policy evaluation functionality works as expected.")
     return True

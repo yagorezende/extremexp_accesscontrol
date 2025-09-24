@@ -86,7 +86,7 @@ class AccessControlCLI:
         print(f"Deployer Balance: {blockchain_admin_user.get_balance()}")
 
         # Transfer some initial balance from the deployer account to the new account
-        blockchain_admin_user.transfer_to(address, 0.1)  # Transfer 1 / 10k Ether
+        # blockchain_admin_user.transfer_to(address, 0.1)  # Transfer 1 / 10k Ether
 
         print(f"New User Balance: {blockchain_user.get_balance()}")
         return address, f"0x{private_key}"
@@ -199,19 +199,8 @@ class AccessControlCLI:
 
         # Prepare PDP by registering the sample policy
         pap_interface.register_resource("resource_1", sample_policy_address)
-        # Add on behalf of permission for test user again
-        pip_interface.evm_interface = test_user.evm_interface
-        pip_interface.grant_on_behalf_of_token(self.blockchain_interface.account_address)
-        pip_interface.evm_interface = self.blockchain_interface
 
-        # Add user attributes
-        pip_interface.add_group_to_user(test_user.account_address, "admin")
-        pip_interface.set_user_role_attribute(test_user.account_address, "admin")
-
-        # Save the resource hash
-        pip_interface.add_resource("resource_1", "hash_123")
-
-        if not validate_policy_evaluation(pdp_interface, test_user):
+        if not validate_policy_evaluation(pdp_interface, pip_interface, test_user):
             raise Exception("Policy evaluation test failed.")
 
         return "SUCCESS"
