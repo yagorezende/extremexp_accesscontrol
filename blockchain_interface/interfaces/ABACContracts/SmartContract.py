@@ -1,8 +1,10 @@
+import os
+
 import solcx
 
 from blockchain_interface.interfaces.EVMInterface import EVMInterface
 
-_solc_version = "0.8.20"
+_solc_version = "0.8.18"
 solcx.install_solc(_solc_version)
 solcx.set_solc_version(_solc_version)
 

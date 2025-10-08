@@ -22,9 +22,16 @@ contract PDP {
         int256 userLat, int256 userLong,
         string memory resourceURI) public view returns (bool) {
 
+        // check if caller has access on behalf of user
+        require(pip.organisationHasAccess(user, msg.sender), "Organisation does not have access on behalf of user");
+
+        // get policy for resource
+        address policyAddress = pap.getResourcePolicy(resourceURI);
+
+        // get resource attributes
         PolicyInformationPoint.ResourceAttributes memory resourceAttribute = pip.getResourceAttributes(resourceURI);
 
-        // assemble context
+        // assemble request context
         AccessControlPolicy.RequestContext memory reqContext = AccessControlPolicy.RequestContext(
             user,
             pip.getUserRoleAttribute(user),
@@ -37,7 +44,7 @@ contract PDP {
             resourceAttribute.contentHash
         );
 
-        address policyAddress = pap.getResourcePolicy(resourceURI);
+        // evaluate request against policy
         return AccessControlPolicy(policyAddress).evaluateRequest(reqContext);
     }
 

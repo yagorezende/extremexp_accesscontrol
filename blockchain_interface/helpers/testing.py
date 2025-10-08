@@ -27,7 +27,10 @@ def validate_on_behalf_of_permission(blockchain_interface: EVMInterface, pip_int
     print(f"Main account has onBehalfOf permission: {has_permission}")
 
     if not has_permission:
+        print(f"❌ Main account has not onBehalfOf permission: {has_permission}")
         return False
+
+    print("✅ Main account has onBehalfOf permission as expected.")
 
     # Revoke permission by deploying a new instance of the contract (simulating a reset)
     print(f"Revoking main account onBehalfOf permission by deploying a new instance of the contract")
@@ -37,9 +40,12 @@ def validate_on_behalf_of_permission(blockchain_interface: EVMInterface, pip_int
     has_permission = pip_interface.organisation_has_access(test_user.account_address, blockchain_interface.account_address)
     print(f"Main account don't have onBehalfOf permission after revocation: {has_permission}")
     if has_permission:
+        print(f"❌ Main account still has onBehalfOf permission after revocation: {has_permission}")
         return False
 
-    print("Test passed: On behalf of permission functionality works as expected.")
+    print("✅ Main account does not have onBehalfOf permission after revocation as expected.")
+
+    print("🌟 Test passed: On behalf of permission functionality works as expected.")
     return True
 
 def validate_user_attributes_management(pip_interface: PolicyInformationPoint, test_user: BlockchainUser) -> bool:
@@ -66,8 +72,10 @@ def validate_user_attributes_management(pip_interface: PolicyInformationPoint, t
     print(f"\t- User groups: {groups}")
     # groups must be empty now
     if groups:
-        print("Failed to remove all groups from user.")
+        print("❌ Failed to remove all groups from user.")
         return False
+
+    print("✅ All groups removed from user as expected.")
 
     # Add group to user
     tx_hash = pip_interface.add_group_to_user(test_user.account_address, "admin")
@@ -77,7 +85,10 @@ def validate_user_attributes_management(pip_interface: PolicyInformationPoint, t
     print(f"User groups: {groups}")
 
     if len(groups) != 1 or groups[0] != "admin":
+        print("❌ Failed to add group to user.")
         return False
+
+    print("✅ Group added to user as expected.")
 
     # Remove group from user
     tx_hash = pip_interface.remove_group_from_user(test_user.account_address, "admin")
@@ -87,9 +98,12 @@ def validate_user_attributes_management(pip_interface: PolicyInformationPoint, t
     print(f"User groups after removal: {groups}")
 
     if groups:
+        print("❌ Failed to remove group from user.")
         return False
 
-    print("Everything looks good so far. Now testing user role attribute management.")
+    print("✅ Group removed from user as expected.")
+
+    print("🌟 Everything looks good so far. Now testing user role attribute management.")
 
     # Set user role attribute
     tx_hash = pip_interface.set_user_role_attribute(test_user.account_address, "manager")
@@ -98,9 +112,12 @@ def validate_user_attributes_management(pip_interface: PolicyInformationPoint, t
     role = pip_interface.get_user_role_attribute(test_user.account_address)
     print(f"User role attribute: {role}")
     if role != "manager":
+        print("❌ Failed to set user role attribute.")
         return False
 
-    print("Test passed: User attributes management functionality works as expected.")
+    print("✅ User role attribute set as expected.")
+
+    print("🌟 Test passed: User attributes management functionality works as expected.")
     return True
 
 def validate_resource_management(pip_interface: PolicyInformationPoint) -> bool:
@@ -117,7 +134,10 @@ def validate_resource_management(pip_interface: PolicyInformationPoint) -> bool:
     attributes = pip_interface.get_resource_attributes("resource_1")
     print(f"Initial resource attributes: {attributes}")
     if attributes.get("uri") != "resource_1" or attributes.get("contentHash") != "hash_123":
+        print("❌ Failed to add resource with correct attributes.")
         return False
+
+    print("✅ Resource added with correct attributes as expected.")
 
     # Update resource content hash
     tx_hash = pip_interface.update_resource_content_hash("resource_1", "hash_456")
@@ -126,9 +146,12 @@ def validate_resource_management(pip_interface: PolicyInformationPoint) -> bool:
     attributes = pip_interface.get_resource_attributes("resource_1")
     print(f"Resource attributes: {attributes}")
     if attributes.get("contentHash") != "hash_456":
+        print("❌ Failed to update resource content hash.")
         return False
 
-    print("Test passed: Resource attributes management functionality works as expected.")
+    print("✅ Resource content hash updated as expected.")
+
+    print("🌟 Test passed: Resource attributes management functionality works as expected.")
     return True
 
 def validate_resource_policy_management(pap_interface: PolicyAdministrationPoint, test_policy_address: str) -> bool:
@@ -147,7 +170,10 @@ def validate_resource_policy_management(pap_interface: PolicyAdministrationPoint
     policy_address = pap_interface.get_resource_policy("resource_1")
     print(f"Policy address for resource_1: {policy_address}")
     if policy_address != test_policy_address:
+        print("❌ Failed to register resource with correct policy address.")
         return False
+
+    print("✅ Resource registered with correct policy address as expected.")
 
     # Remove resource policy
     tx_hash = pap_interface.remove_resource_policy("resource_1")
@@ -156,7 +182,10 @@ def validate_resource_policy_management(pap_interface: PolicyAdministrationPoint
     policy_address = pap_interface.get_resource_policy("resource_1")
     print(f"Policy address for resource_1 after removal: {policy_address}")
     if policy_address is not None and policy_address != "0x0000000000000000000000000000000000000000":
+        print("❌ Failed to remove resource policy.")
         return False
+
+    print("✅ Resource policy removed as expected.")
 
     # Register policy with metadata
     tx_hash = pap_interface.register_policy(test_policy_address)
@@ -166,7 +195,10 @@ def validate_resource_policy_management(pap_interface: PolicyAdministrationPoint
     policies = pap_interface.get_registered_policy()
     print(f"Registered policies: {policies}")
     if test_policy_address not in policies:
+        print("❌ Failed to register policy.")
         return False
+
+    print("✅ Policy registered as expected.")
 
     # Unregister policy
     tx_hash = pap_interface.unregister_policy(test_policy_address)
@@ -175,9 +207,11 @@ def validate_resource_policy_management(pap_interface: PolicyAdministrationPoint
     policies = pap_interface.get_registered_policy()
     print(f"Registered policies after unregistration: {policies}")
     if test_policy_address in policies:
+        print("❌ Failed to unregister policy.")
         return False
+    print("✅ Policy unregistered as expected.")
 
-    print("Test passed: Resource policy management functionality works as expected.")
+    print("🌟 Test passed: Resource policy management functionality works as expected.")
     return True
 
 
@@ -216,8 +250,10 @@ def validate_policy_evaluation(pdp_interface: PolicyDecisionPoint, pip_interface
 
     print(f"Access granted for valid request: {access_granted}")
     if not access_granted:
-        print("Access denied for valid request.")
+        print("❌ Access not granted for valid request.")
         return False
+
+    print("✅ Access granted for valid request as expected.")
 
     # Evaluate an invalid access request (should be denied)
     print("Testing user out of location scenario.")
@@ -233,8 +269,10 @@ def validate_policy_evaluation(pdp_interface: PolicyDecisionPoint, pip_interface
 
     print(f"Access granted for invalid request: {access_granted}")
     if access_granted:
-        print("Access granted for invalid request.")
+        print("❌ Access granted for invalid request.")
         return False
+
+    print("✅ Access denied for invalid request as expected.")
 
     print(f"Testing user without required role scenario.")
     # Remove admin role attribute
@@ -251,8 +289,10 @@ def validate_policy_evaluation(pdp_interface: PolicyDecisionPoint, pip_interface
 
     print(f"Access granted for user without required role: {access_granted}")
     if access_granted:
-        print("Access granted for user without required role.")
+        print("❌ Access granted for user without required role.")
         return False
 
-    print("Test passed: Policy evaluation functionality works as expected.")
+    print("✅ Access denied for user without required role as expected.")
+
+    print("🌟 Test passed: Policy evaluation functionality works as expected.")
     return True

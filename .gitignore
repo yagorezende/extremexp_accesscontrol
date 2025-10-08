@@ -1,5 +1,6 @@
 .venv
 .env
+.env.local
 .env.prod
 .idea/**
 .idea
@@ -11,3 +12,4 @@
 contracts/*.abi
 contracts/*.bin
 contracts/.sol
+contracts/accounts.json

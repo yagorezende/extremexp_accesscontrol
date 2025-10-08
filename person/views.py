@@ -3,6 +3,9 @@ from flask_restx import Namespace, Resource
 from requests import HTTPError
 
 from api import settings
+from blockchain_interface.helpers.utils import transaction_to_dict
+from blockchain_interface.interfaces.ABACContracts.PIP import PolicyInformationPoint
+from blockchain_interface.interfaces.HyperledgerBesu import HyperledgerBesu
 from keycloak_interface.errors import KeycloakACError, MissingTokenError
 from keycloak_interface.keycloakInterface import KeycloakInterface
 from keycloak_interface.utils.functions import get_keycloak_user, get_keycloak_user_by_email, \
@@ -22,6 +25,16 @@ keycloak_interface = KeycloakInterface(
     client_id=settings.KEYCLOAK_CONFIG.get('KEYCLOAK_CLIENT_ID'),
     client_secret_key=settings.KEYCLOAK_CONFIG.get('KEYCLOAK_CLIENT_SECRET_KEY')
 )
+
+evm_interface_instance = HyperledgerBesu(settings.BLOCKCHAIN_CONFIG.get('BLOCKCHAIN_RPC_URL')).connect(
+    settings.BLOCKCHAIN_CONFIG.get('BLOCKCHAIN_PRIVATE_KEY')
+)
+
+PIPSmartContract = PolicyInformationPoint(
+    evm_interface_instance,
+    settings.BLOCKCHAIN_CONFIG.get('POLICY_INFORMATION_POINT_ADDRESS'),
+    f"{settings.BLOCKCHAIN_CONFIG.get('BLOCKCHAIN_CONTRACTS_ROOT_PATH')}/PIP.sol"
+).load()
 
 
 @api.route("/login")
@@ -171,38 +184,56 @@ class PersonView(Resource):
 
     def patch(self, uuid):
         try:
-            if not keycloak_interface.validate_request_token(extract_header_token(request)):
+            token = extract_header_token(request)
+            if not keycloak_interface.validate_request_token(token):
                 return {'error': 'Invalid or missing token'}, 401
 
             payload = request.json
             keycloak_root_connection = KeyCloakRootConnection()
 
-            # TODO: integrate with the blockchain to update the user groups
-            if payload.get('groups'):
-                group_ids = []
-                for group in payload['groups']:
-                    group_data = keycloak_root_connection.get_group(group)
-                    if group_data is None:
-                        return {'error': f'Group {group} does not exist'}, 404
-                    group_ids.append(group_data.get('id'))
+            user_wallet_address = None
+            user_info = None
+            try:
+                user_info, status_code = keycloak_interface.userinfo(token)
+                if status_code != 200:
+                    return {'error': 'Invalid token'}, 401
 
-                for group_id in group_ids:
-                    keycloak_root_connection.set_user_group(uuid, group_id)
-
-            # TODO: integrate with the blockchain to update the user role
-            if payload.get('role'):
-                role = payload.get('role')
-                role_obj = keycloak_root_connection.get_realm_role(role)
-                if role_obj is None:
-                    return {'error': f'Role {role} does not exist'}, 404
-                keycloak_root_connection.set_user_role(uuid, role_obj)
+                user_wallet_address = user_info.get('user_wallet_address')
+            except Exception as e:
+                return {'error': 'Invalid token', 'error_description': str(e)}, 401
 
             if payload.get('attributes'):
                 attributes = payload.get('attributes')
-                # TODO: Validate attributes format
-                keycloak_root_connection.set_user_attributes(uuid, attributes)
 
-            return {"message": "TODO", "payload": payload}, 200
+                # Avoid overwriting these attributes if they are in the payload
+                attributes["name"] = user_info.get('name')
+                attributes["email"] = user_info.get('email')
+                attributes['given_name'] = user_info.get('given_name')
+                attributes['family_name'] = user_info.get('family_name')
+
+                # TODO: Validate attributes format
+                keycloak_root_connection.set_user_attributes(uuid, attributes.get('attributes'))
+
+            payload['transactions'] = []
+            # TODO: integrate with the blockchain to update the user groups
+            if payload.get('groups') and user_wallet_address:
+                # Add groups to user in the PIP
+                for group in payload.get('groups'):
+                    tx = PIPSmartContract.add_group_to_user(user_wallet_address, group)
+                    payload['transactions'].append({
+                        'group': group,
+                        'transaction': transaction_to_dict(tx)
+                    })
+
+            # TODO: integrate with the blockchain to update the user role
+            if payload.get('role') and user_wallet_address:
+                tx = PIPSmartContract.set_user_role_attribute(user_wallet_address, payload.get('role'))
+                payload['transactions'].append({
+                    'role': payload.get('role'),
+                    'transaction': transaction_to_dict(tx)
+                })
+
+            return payload, 200
         except MissingTokenError as e:
             return {'error': e.message}, 401
         except KeycloakACError as e:

@@ -74,6 +74,16 @@ class KeycloakInterface:
              json: Response body
          """
         response = requests.request(method, url, **kwargs)
+
+        # logging the response for debugging purposes
+        logging.error(f"Response Status Code: {response.status_code}")
+        logging.error(f"Response Body: {response.text}")
+        if response.status_code >= 400:
+            try:
+                error_response = response.json()
+            except json.JSONDecodeError:
+                error_response = {"error": "Unknown error", "error_description": response.text}
+            raise HTTPError(f"HTTP {response.status_code}: {error_response}")
         return response.json(), response.status_code
 
     def authenticate(self, username, password, raise_exception=False) -> Tuple[dict, int]:

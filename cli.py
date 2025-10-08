@@ -40,6 +40,12 @@ class AccessControlCLI:
             return self.create_account()
         elif command == "test_abac":
             return self._test_abac()
+        elif self.running_args.get('command') == "on-behalf-of":
+            user_private_key = self.running_args.get('user_private_key')
+            wallet_address = self.running_args.get('wallet_address')
+            if not user_private_key:
+                raise Exception("Please provide both 'user_private_key' for granting on behalf of permission.")
+            return self._grant_on_behalf_of_permission(user_private_key)
         elif command == "deploy":
             contract_name = self.running_args.get('deploy')
             deploy_args = self.running_args.get('deploy_args_file', [])
@@ -205,11 +211,55 @@ class AccessControlCLI:
 
         return "SUCCESS"
 
+    def _grant_on_behalf_of_permission(self, user_private_key: str):
+        """
+        Grant on behalf of permission to a wallet address.
+        :param user_private_key: str - the private key of the user account
+        :param to_grant_wallet_address: str - the wallet address to grant permission to
+        """
+        # create user connection
+        user_blockchain_interface = HyperledgerBesu(self.blockchain_rpc_url, HyperledgerBesu.DEFAULT_GAS_LIMIT)
+        user_blockchain_interface.connect(user_private_key)
+
+        print("Connected:", self.blockchain_interface.web3.is_connected())
+        print("Network ID:", self.blockchain_interface.web3.eth.chain_id)
+
+        # Loading PIP
+        pip_address = self.running_args.get('environ').get('POLICY_INFORMATION_POINT_ADDRESS')
+        pip_file_path = f"{self.contracts_root_path}/{self.POLICY_INFORMATION_POINT_CONTRACT}"
+        # Load pip from the user interface
+        pip_interface = PolicyInformationPoint(user_blockchain_interface, pip_address, pip_file_path).load()
+
+        print("Contract address:", pip_interface.contract_address)
+        print("Code at contract:", self.blockchain_interface.web3.eth.get_code(pip_interface.contract_address).hex())
+
+        # Grant on behalf of permission
+        pip_interface.grant_on_behalf_of_token(self.blockchain_interface.account_address)
+        # Return to organisation account to check the grant permission
+        pip_interface.evm_interface = self.blockchain_interface
+
+        print(f"Granted on behalf of permission to {self.blockchain_interface.account_address}.")
+
+        # validating permission
+        has_permission = pip_interface.organisation_has_access(user_blockchain_interface.account_address, self.blockchain_interface.account_address)
+        print(f"Organisation account has onBehalfOf permission: {has_permission}")
+
+        if not has_permission:
+            print(f"❌ Organisation account has not onBehalfOf permission: {has_permission}")
+            print("❌ FAILURE")
+            return False
+
+        print("✅ Organisation account has onBehalfOf permission as expected.")
+
+        return "🌟 SUCCESS"
+
+
 
 
 if __name__ == '__main__':
     # Construct the argument parser
     ap = argparse.ArgumentParser()
+    subparsers = ap.add_subparsers(dest="command")
 
     # Add the arguments to the parser
     ap.add_argument("-cc", "--create_account", nargs="?", const=True, required=False, help="Create a new account")
@@ -218,6 +268,12 @@ if __name__ == '__main__':
     ap.add_argument("--deploy-args-file", nargs="?", required=False, help="Deploy .sol contract and return the address")
     ap.add_argument("-t", "--test_abac", nargs="?", const=True, required=False, help="Run ABAC test suite")
     ap.add_argument("--contract-args", nargs="*", required=False, help="Arguments to pass to the contract constructor")
+
+    # ap.add_argument("-o", "--on-behalf-of", nargs=2, metavar=('USER_PRIVATE_KEY', 'WALLET_ADDRESS'), required=False,
+    #                 help="Grant on behalf of permission to a wallet address")
+
+    on_behalf_of_parser = subparsers.add_parser('on-behalf-of', help="Grant on behalf of permission to a wallet address")
+    on_behalf_of_parser.add_argument('-upk', '--user_private_key', help="The private key of the user account")
 
     args = vars(ap.parse_args())
     print(args)
@@ -232,7 +288,7 @@ if __name__ == '__main__':
     app_cli.load_wallet(os.environ.get("BLOCKCHAIN_PRIVATE_KEY"))
 
     for arg, value in args.items():
-        if value:
+        if value and arg not in ['environ', 'user_private_key', 'wallet_address', 'deploy_args_file', 'contract_args']:
             print(f"Argument {arg} is set to {value}")
             result = app_cli.handle(arg)
             print(f"Result: {result}")

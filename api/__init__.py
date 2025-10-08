@@ -5,6 +5,7 @@ from flask_restx import Api, apidoc
 from api.api import api as translator_ns
 from person.views import api as person_ns
 from orgs.views import api as orgs_ns
+from resource.views import api as resource_ns
 app = Flask(__name__)
 cors = CORS(app,
             allow_headers=["Content-Type", "Authorization", "User-Agent", "Accept"],
@@ -45,4 +46,4 @@ api = Api(app,
 # create an app context so the App can be used in different modules
 api.add_namespace(translator_ns, path='/api/v1/translator')
 api.add_namespace(person_ns, path='/api/v1/person')
-api.add_namespace(orgs_ns, path='/api/v1/orgs')
+api.add_namespace(resource_ns, path='/api/v1/resource')

@@ -16,10 +16,12 @@ class EVMInterface:
         """
         Loads an account to the Web3 instance.
         :param account_pk: str - the private key of the account
+        :return: self - the EVMInterface instance
         """
         self.web3.eth.default_account = self.web3.eth.account.from_key(account_pk)
         self.account_private_key = account_pk
         self.account_address = self.web3.eth.account.from_key(account_pk).address
+        return self
 
     def disconnect(self):
         """
