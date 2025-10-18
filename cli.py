@@ -267,7 +267,6 @@ if __name__ == '__main__':
     ap.add_argument("-d", "--deploy", nargs="?", const=True, required=False, help="Deploy .sol contract and return the address")
     ap.add_argument("--deploy-args-file", nargs="?", required=False, help="Deploy .sol contract and return the address")
     ap.add_argument("-t", "--test_abac", nargs="?", const=True, required=False, help="Run ABAC test suite")
-    ap.add_argument("--contract-args", nargs="*", required=False, help="Arguments to pass to the contract constructor")
 
     # ap.add_argument("-o", "--on-behalf-of", nargs=2, metavar=('USER_PRIVATE_KEY', 'WALLET_ADDRESS'), required=False,
     #                 help="Grant on behalf of permission to a wallet address")

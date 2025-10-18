@@ -235,7 +235,7 @@ def validate_policy_evaluation(pdp_interface: PolicyDecisionPoint, pip_interface
     pip_interface.set_user_role_attribute(test_user.account_address, "admin")
 
     # Save the resource hash
-    pip_interface.add_resource("resource_1", "0x0")
+    pip_interface.add_resource("resource_1", "0x3e19fc037c6ced7075bbbb8e3163c92a")
 
     # Evaluate a valid access request
     access_granted = pdp_interface.evaluate_request(
