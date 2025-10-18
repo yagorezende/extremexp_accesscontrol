@@ -22,7 +22,7 @@ cryptography==43.0.3
 cytoolz==1.0.0
 deprecation==2.1.0
 dill==0.3.9
-eth-account==0.13.4
+eth-account==0.13.7
 eth-hash==0.7.0
 eth-keyfile==0.8.1
 eth-keys==0.6.0
@@ -53,6 +53,7 @@ mccabe==0.7.0
 multidict==6.1.0
 packaging==23.2
 parsimonious==0.10.0
+pi==0.1.2
 platformdirs==4.3.7
 propcache==0.2.1
 py-solc-x==2.0.3
@@ -81,7 +82,7 @@ toolz==1.0.0
 types-requests==2.32.0.20241016
 typing_extensions==4.12.2
 urllib3==2.2.3
-web3==7.6.0
+web3==7.13.0
 websockets==13.1
 Werkzeug==3.1.1
 yarl==1.18.3

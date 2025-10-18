@@ -1,5 +1,10 @@
 .PHONY: install run destroy run-docker
 
+setup:
+	python3 -m venv .venv
+	. .venv/bin/activate && pip install --upgrade pip
+	. .venv/bin/activate && pip install -r requirements.txt
+
 install:
 	bash install.sh
 
@@ -8,6 +13,9 @@ run:
 
 run-docker:
 	docker-compose up --build
+
+bootstrap:
+	bash bootstrap.sh
 
 destroy:
 	rm -rf .venv
