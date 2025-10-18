@@ -2,12 +2,14 @@ import json
 import sys
 
 import solcx
+from typing_extensions import override
 from web3 import Web3, HTTPProvider
 from web3.middleware import ExtraDataToPOAMiddleware
 
-from errors import SolidityCompilationError, SolidityDeploymentError
+from blockchain_interface.errors import SolidityCompilationError, SolidityDeploymentError
+from blockchain_interface.interfaces.EVMInterface import EVMInterface
 
-_solc_version = "0.8.17"
+_solc_version = "0.8.18"
 solcx.install_solc(_solc_version)
 solcx.set_solc_version(_solc_version)
 
@@ -17,11 +19,14 @@ class SolidityDeployer:
     Deploys a Solidity contract to the blockchain. generating the ABI and bytecode
     """
 
+    DEFAULT_GAS_LIMIT = 4100000
+
     def __init__(self, blockchain_address: str, gas_limit: int):
         self.web3 = Web3(HTTPProvider(blockchain_address))
         self.web3.middleware_onion.inject(ExtraDataToPOAMiddleware, layer=0)
         self.gas_limit = gas_limit
         self.account_private_key = None
+        self.account_address = None
 
     def load_account(self, account_pk: str):
         """
@@ -30,6 +35,18 @@ class SolidityDeployer:
         """
         self.web3.eth.default_account = self.web3.eth.account.from_key(account_pk)
         self.account_private_key = account_pk
+
+    def load_from_evm_interface(self, evm_interface: EVMInterface):
+        """
+        Loads account details from an existing EVMInterface instance.
+        :param evm_interface: EVMInterface - the EVMInterface instance to load from
+        :return: BlockchainUser - self
+        """
+        self.web3 = evm_interface.web3
+        self.gas_limit = evm_interface.gas_limit
+        self.account_private_key = evm_interface.account_private_key
+        self.account_address = evm_interface.account_address
+        return self
 
     def compile_contract(self, contract_path: str, dump_compiled=False) -> dict:
         """
@@ -45,11 +62,10 @@ class SolidityDeployer:
         try:
             with open(contract_path, 'r') as file:
                 contract_code = file.read()
-                compiled_contract = solcx.compile_source(contract_code, output_values=['abi', 'bin'])
+                compiled_contract = solcx.compile_source(contract_code, overwrite=True, output_values=['abi', 'bin'])
                 if dump_compiled:
                     contract_raw_name = list(compiled_contract.keys())[0]
-                    contract_name = list(compiled_contract.keys())[0].split(':')[-1]
-                    contract_id, contract_interface = compiled_contract.popitem()
+                    contract_interface = compiled_contract[contract_raw_name]
 
                     abi = contract_interface['abi']
                     # dump json abi

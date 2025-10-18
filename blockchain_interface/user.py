@@ -1,8 +1,10 @@
-import sys
+import argparse
 from time import sleep
 
 from web3 import Web3, HTTPProvider
 from web3.middleware import ExtraDataToPOAMiddleware
+
+from blockchain_interface.interfaces.EVMInterface import EVMInterface
 
 
 class BlockchainUser:
@@ -10,18 +12,33 @@ class BlockchainUser:
         self.web3 = Web3(HTTPProvider(blockchain_address))
         self.web3.middleware_onion.inject(ExtraDataToPOAMiddleware, layer=0)
         self.gas_limit = gas_limit
+        self.evm_interface = None
         self.account_private_key = None
         self.account_address = None
+
+    def load_from_evm_interface(self, evm_interface: EVMInterface):
+        """
+        Loads account details from an existing EVMInterface instance.
+        :param evm_interface: EVMInterface - the EVMInterface instance to load from
+        :return: BlockchainUser - self
+        """
+        self.evm_interface = evm_interface
+        self.web3 = evm_interface.web3
+        self.gas_limit = evm_interface.gas_limit
+        self.account_private_key = evm_interface.account_private_key
+        self.account_address = evm_interface.account_address
+        return self
 
     def load_account(self, account_pk: str):
         """
         Loads an account to the Web3 instance.
         :param account_pk: str - the private key of the account
+        :return: BlockchainUser - self
         """
         self.web3.eth.default_account = self.web3.eth.account.from_key(account_pk)
         self.account_private_key = account_pk
         self.account_address = self.web3.eth.account.from_key(account_pk).address
-        return self.account_address
+        return self
 
     def create_account(self):
         """
@@ -62,28 +79,3 @@ class BlockchainUser:
         signed_tx = self.web3.eth.account.sign_transaction(tx, self.account_private_key)
         tx_hash = self.web3.eth.send_raw_transaction(signed_tx.raw_transaction)
         return tx_hash
-
-
-if __name__ == '__main__':
-    user_pk = sys.argv[1]
-
-    # Example usage
-    blockchain_user = BlockchainUser('http://localhost:8555')
-    address, private_key = blockchain_user.create_account()
-    print(f"Address: {address}")
-    print(f"Private Key: {private_key}")
-
-    default_user = BlockchainUser('http://localhost:8555')
-    default_user.load_account(user_pk)
-    print(f"Default User Address: {default_user.account_address}")
-    transaction = default_user.transfer_to(address, 1)
-    print(f"Transaction Hash: {transaction}")
-    print("Waiting for transaction to be mined...")
-    while True:
-        sleep(1)
-        tx_receipt = blockchain_user.web3.eth.get_transaction_receipt(transaction)
-        if tx_receipt is not None:
-            print(f"Transaction mined: {tx_receipt}")
-            break
-
-    print(f"New User Balance: {blockchain_user.get_balance()}")

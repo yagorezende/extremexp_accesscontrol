@@ -46,7 +46,45 @@ The Swagger documentation is available on the root page.
 - [ ] Map the XACML basic functions over the PolicyGraph (See: https://en.wikipedia.org/wiki/XACML#Functions)
 - [ ] Translate the PolicyGraph to a Solidity Smart Contract (Solidity Policy Builder module)
 - [x] Deploy the Smart Contract and retrieve the address (Blockchain Interface module)
-- [ ] Register the Policy address to some database (Policy Address DB)
+- [x] Register the Policy address to some database (Policy Address DB)
 - [x] Integrate with the Keycloak Authorization Server (OAuth or MetaMask)
-- [ ] Integrate with the [ExtremeXP Portal](https://github.com/ExtremeXP-VU/ExtremeXP-portal)
-- [ ] Add the Smart Contracts used for the ABAC module in the project for documentation purposes
+- [x] Integrate with the [ExtremeXP Portal](https://github.com/ExtremeXP-VU/ExtremeXP-portal)
+- [x] Add the Smart Contracts used for the ABAC module in the project for documentation purposes
+
+
+### Tests:
+Before running the tests, ensure your `.env` file is updated with all required environment variables.
+It is essential that the blockchain network is up and running, and that your `.env` file contains the correct values
+for the blockchain RPC address and the manager private key, specified as `BLOCKCHAIN_PRIVATE_KEY`.
+
+```bash
+# setup the test environment
+make setup
+
+# load local venv
+source .venv/bin/activate
+
+### UPDATE THE .env FILE WITH THE FOLLOWING VARIABLES ###
+
+# create the account used for testing
+python3 cli.py --cc 
+
+# Copy the output private key and paste it in the .env file as TEST_USER_PRIVATE_KEY
+TEST_USER_PRIVATE_KEY="your_private_key_here"
+
+# deploy the smart contract used for testing
+python3 cli.py -s
+
+# Copy the output contract address and paste it in the .env file as the POLICY_* addresses
+POLICY_INFORMATION_POINT_ADDRESS="pip_address_here"
+POLICY_ADMINISTRATION_POINT_ADDRESS="pap_address_here"
+POLICY_DECISION_POINT_ADDRESS="pdp_address_here"
+
+# deploy the policy smart contract used for testing
+python3 cli.py -d SamplePolicy.sol --deploy-args-file SamplePolicy.json
+# Copy the output contract address and paste it in the .env file as SAMPLE_POLICY_ADDRESS
+SAMPLE_POLICY_ADDRESS="sample_policy_address_here"
+
+# run the tests
+python3 cli.py -t
+```
