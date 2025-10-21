@@ -1,0 +1,373 @@
+{
+    "swagger": "2.0",
+    "basePath": "/extreme_auth",
+    "paths": {
+        "/api/v1/person/login": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "operationId": "login",
+                "parameters": [
+                    {
+                        "description": "Username",
+                        "name": "username",
+                        "type": "string",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Password",
+                        "name": "password",
+                        "type": "string",
+                        "in": "query"
+                    }
+                ],
+                "tags": [
+                    "Person"
+                ]
+            }
+        },
+        "/api/v1/person/register": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "operationId": "register",
+                "parameters": [
+                    {
+                        "description": "Username",
+                        "name": "username",
+                        "type": "string",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Password",
+                        "name": "password",
+                        "type": "string",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Email",
+                        "name": "email",
+                        "type": "string",
+                        "in": "query"
+                    },
+                    {
+                        "description": "User Full Name",
+                        "name": "name",
+                        "type": "string",
+                        "in": "query"
+                    }
+                ],
+                "tags": [
+                    "Person"
+                ]
+            }
+        },
+        "/api/v1/person/user": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "operationId": "list_person",
+                "parameters": [
+                    {
+                        "description": "Page number to retrieve",
+                        "name": "page",
+                        "type": "string",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Number of users per page",
+                        "name": "size",
+                        "type": "string",
+                        "in": "query"
+                    }
+                ],
+                "tags": [
+                    "Person"
+                ]
+            }
+        },
+        "/api/v1/person/user/{uuid}": {
+            "patch": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "operationId": "patch_person_view",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "tags": [
+                    "Person"
+                ]
+            },
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "operationId": "get_person",
+                "parameters": [
+                    {
+                        "name": "uuid",
+                        "in": "path",
+                        "required": true,
+                        "type": "string",
+                        "description": "UUID of the person"
+                    }
+                ],
+                "tags": [
+                    "Person"
+                ]
+            }
+        },
+        "/api/v1/person/userinfo": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "operationId": "userinfo",
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "tags": [
+                    "Person"
+                ]
+            }
+        },
+        "/api/v1/resource/access": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "operationId": "access",
+                "parameters": [
+                    {
+                        "description": "Resource URI",
+                        "name": "uri",
+                        "type": "string",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Origin IP Address",
+                        "name": "origin_ip",
+                        "type": "string",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Scope or Action to be performed",
+                        "name": "scope",
+                        "type": "string",
+                        "in": "query"
+                    }
+                ],
+                "tags": [
+                    "Resources"
+                ]
+            }
+        },
+        "/api/v1/resource/protect": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "operationId": "protect",
+                "parameters": [
+                    {
+                        "description": "Resource URI",
+                        "name": "uri",
+                        "type": "string",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Resource Content Hash (can be 0x0 if not applicable)",
+                        "name": "content_hash",
+                        "type": "string",
+                        "in": "query"
+                    },
+                    {
+                        "description": "Policy address hash in the blockchain",
+                        "name": "policy_address",
+                        "type": "string",
+                        "in": "query"
+                    }
+                ],
+                "tags": [
+                    "Resources"
+                ]
+            },
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "operationId": "protect",
+                "parameters": [
+                    {
+                        "description": "Resource URI",
+                        "name": "uri",
+                        "type": "string",
+                        "in": "query"
+                    }
+                ],
+                "tags": [
+                    "Resources"
+                ]
+            }
+        },
+        "/api/v1/translator/": {
+            "post": {
+                "responses": {
+                    "201": {
+                        "description": "Success",
+                        "schema": {
+                            "$ref": "#/definitions/Policy"
+                        }
+                    }
+                },
+                "summary": "Create a new policy",
+                "operationId": "create_policy",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/Policy"
+                        }
+                    },
+                    {
+                        "name": "X-Fields",
+                        "in": "header",
+                        "type": "string",
+                        "format": "mask",
+                        "description": "An optional fields mask"
+                    }
+                ],
+                "tags": [
+                    "Translator"
+                ]
+            },
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Policy"
+                            }
+                        }
+                    }
+                },
+                "summary": "List all policies",
+                "operationId": "list_policies",
+                "parameters": [
+                    {
+                        "name": "X-Fields",
+                        "in": "header",
+                        "type": "string",
+                        "format": "mask",
+                        "description": "An optional fields mask"
+                    }
+                ],
+                "tags": [
+                    "Translator"
+                ]
+            }
+        }
+    },
+    "info": {
+        "title": "Access Control ExtremeXP App",
+        "version": "1.0",
+        "description": "Access Control API for ExtremeXP App"
+    },
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "securityDefinitions": {
+        "bearer": {
+            "name": "Authorization",
+            "in": "header",
+            "type": "oauth2",
+            "flow": "password",
+            "scopes": {
+                "openid": "openid"
+            },
+            "description": "Request with username and password!"
+        }
+    },
+    "tags": [
+        {
+            "name": "Translator",
+            "description": "ExtremeXP Translator Endpoints"
+        },
+        {
+            "name": "Person",
+            "description": "ExtremeXP Person Endpoints"
+        },
+        {
+            "name": "Resources",
+            "description": "ExtremeXP Resource Management Endpoints"
+        }
+    ],
+    "definitions": {
+        "Policy": {
+            "required": [
+                "policy"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "description": "The policy unique identifier",
+                    "readOnly": true
+                },
+                "address": {
+                    "type": "string",
+                    "description": "The policy blockchain address",
+                    "readOnly": true
+                },
+                "policy": {
+                    "type": "string",
+                    "description": "The policy JSON content"
+                }
+            },
+            "type": "object"
+        }
+    },
+    "responses": {
+        "ParseError": {
+            "description": "When a mask can't be parsed"
+        },
+        "MaskError": {
+            "description": "When any error occurs on mask"
+        }
+    }
+}

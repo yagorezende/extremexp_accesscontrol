@@ -38,7 +38,7 @@ The Swagger documentation is available on the root page.
 
 ## Development Progress
 #### Overall progress: 
-![](https://geps.dev/progress/33)
+![](https://geps.dev/progress/66)
 
 #### Tasks:
 - [x] Project Basic Structure (Flask API + Endpoints + kickoff script)
