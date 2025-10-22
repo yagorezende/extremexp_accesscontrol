@@ -88,3 +88,8 @@ SAMPLE_POLICY_ADDRESS="sample_policy_address_here"
 # run the tests
 python3 cli.py -t
 ```
+
+## Usage
+For a full documentation of the API endpoints, please refer to the pages available at 
+How to: https://yagorezende.github.io/extremexp_accesscontrol
+Swagger UI: https://yagorezende.github.io/extremexp_accesscontrol/swagger
