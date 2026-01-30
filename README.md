@@ -42,9 +42,9 @@ The Swagger documentation is available on the root page.
 
 #### Tasks:
 - [x] Project Basic Structure (Flask API + Endpoints + kickoff script)
-- [ ] XACML/JSON to the PolicyGraph structure (Structure Builder module)
-- [ ] Map the XACML basic functions over the PolicyGraph (See: https://en.wikipedia.org/wiki/XACML#Functions)
-- [ ] Translate the PolicyGraph to a Solidity Smart Contract (Solidity Policy Builder module)
+- [x] XACML/JSON to the PolicyGraph structure (Structure Builder module)
+- [x] Map the XACML basic functions over the PolicyGraph (See: https://en.wikipedia.org/wiki/XACML#Functions)
+- [x] Translate the PolicyGraph to a Solidity Smart Contract (Solidity Policy Builder module)
 - [x] Deploy the Smart Contract and retrieve the address (Blockchain Interface module)
 - [x] Register the Policy address to some database (Policy Address DB)
 - [x] Integrate with the Keycloak Authorization Server (OAuth or MetaMask)
@@ -67,7 +67,7 @@ source .venv/bin/activate
 ### UPDATE THE .env FILE WITH THE FOLLOWING VARIABLES ###
 
 # create the account used for testing
-python3 cli.py --cc 
+python3 cli.py -cc 
 
 # Copy the output private key and paste it in the .env file as TEST_USER_PRIVATE_KEY
 TEST_USER_PRIVATE_KEY="your_private_key_here"
