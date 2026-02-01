@@ -152,13 +152,14 @@ class KeycloakHandler:
                 "firstName": data['name'].split(' ')[0],
                 "lastName": ' '.join(x for x in data['name'].split(' ')[1::]),
                 "emailVerified": True,
-                "attributes": {
-                    "locale": ["en"],
-                    "userPublicKey": ["N/A"],
-                    "userWalletAddress": ["N/A"],
-                    "userLocationLat": ["0.0"],
-                    "userLocationLong": ["0.0"],
-                }
+                "attributes": data.get('attributes',
+                                       {
+                                           "locale": ["en"],
+                                           "userPublicKey": ["0x"],
+                                           "userWalletAddress": ["0x"],
+                                           "userLocationLat": ["0"],
+                                           "userLocationLong": ["0"],
+                                       })
             })
         except Exception as e:
             return self.keycloak_admin.get_user_id(data['email'])

@@ -6,6 +6,7 @@ from api import settings
 from blockchain_interface.helpers.utils import transaction_to_dict
 from blockchain_interface.interfaces.ABACContracts.PIP import PolicyInformationPoint
 from blockchain_interface.interfaces.HyperledgerBesu import HyperledgerBesu
+from blockchain_interface.user import BlockchainUser
 from keycloak_interface.errors import KeycloakACError, MissingTokenError
 from keycloak_interface.keycloakInterface import KeycloakInterface
 from keycloak_interface.utils.functions import get_keycloak_user, get_keycloak_user_by_email, \
@@ -99,11 +100,22 @@ class PersonRegisterView(Resource):
         name = api.payload['name']
 
         try:
+            # Create blockchain wallet for the user
+            blockchain_user = BlockchainUser(evm_interface_instance.blockchain_address)
+            address, private_key = blockchain_user.create_account()
+            public_key = str(evm_interface_instance.from_private_key_to_public_key(private_key))
+
             response, status_code = keycloak_interface.create_user(
                 username,
                 password,
                 email,
-                name
+                name,
+                attributes={
+                        "userPublicKey": public_key,
+                        "userWalletAddress": address,
+                        "userLocationLat": 0,
+                        "userLocationLong": 0
+                    }
             )
 
             if status_code != 201:

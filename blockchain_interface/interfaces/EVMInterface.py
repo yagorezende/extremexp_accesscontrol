@@ -7,9 +7,11 @@ from web3.contract import Contract
 class EVMInterface:
     def __init__(self, blockchain_address: str, blockchain_type: str):
         self.web3 = Web3(HTTPProvider(blockchain_address))
+        self.blockchain_address = blockchain_address
         self.blockchain_type = blockchain_type
         self.gas_limit = None
         self.account_private_key = None
+        self.account_public_key = None
         self.account_address = None
 
     def connect(self, account_pk: str):
@@ -20,6 +22,7 @@ class EVMInterface:
         """
         self.web3.eth.default_account = self.web3.eth.account.from_key(account_pk)
         self.account_private_key = account_pk
+        self.account_public_key = self.from_private_key_to_public_key(account_pk)
         self.account_address = self.web3.eth.account.from_key(account_pk).address
         return self
 
@@ -105,6 +108,14 @@ class EVMInterface:
         """
         tx_hash = contract.functions[function_name](*args).transact()
         return dict(self.web3.eth.wait_for_transaction_receipt(tx_hash))
+
+    def from_private_key_to_public_key(self, private_key: str) -> str:
+        """
+        Converts a private key to a public key.
+        :param private_key: str - the private key to convert
+        :return: str - the corresponding public key
+        """
+        return self.web3.eth.account._parse_private_key(private_key).public_key
 
     def listen_to_events(self, contract_address, event_name, callback):
         raise NotImplementedError("This method should be overridden by subclasses")

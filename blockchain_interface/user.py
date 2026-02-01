@@ -14,6 +14,7 @@ class BlockchainUser:
         self.gas_limit = gas_limit
         self.evm_interface = None
         self.account_private_key = None
+        self.account_public_key = None
         self.account_address = None
 
     def load_from_evm_interface(self, evm_interface: EVMInterface):
@@ -26,6 +27,7 @@ class BlockchainUser:
         self.web3 = evm_interface.web3
         self.gas_limit = evm_interface.gas_limit
         self.account_private_key = evm_interface.account_private_key
+        self.account_public_key = evm_interface.account_public_key
         self.account_address = evm_interface.account_address
         return self
 

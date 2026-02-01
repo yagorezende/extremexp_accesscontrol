@@ -45,14 +45,28 @@ def create_keycloak_organisation_group(name) -> str | None:
     return KeyCloakRootConnection().create_group(name)
 
 
-def get_or_create_keycloak_user(username, email, name, password, role):
+def get_or_create_keycloak_user(username, email, name, password, role, attributes:dict=None):
     keycloak_user_id = get_keycloak_user(username)
     keycloak_root_connection = KeyCloakRootConnection()
     created = False
+    if not attributes:
+        attributes = {
+                    "locale": ["en"],
+                    "userPublicKey": "0x",
+                    "userWalletAddress": "0x",
+                    "userLocationLat": 0,
+                    "userLocationLong": 0
+                }
+
     if keycloak_user_id is None:
         created = True
         keycloak_user_id = keycloak_root_connection.create_keycloak_user(
-            {"username": username, "email": email, "name": name})
+            {
+                "username": username,
+                "email": email,
+                "name": name,
+                "attributes": attributes
+             })
         keycloak_root_connection.set_user_password(keycloak_user_id, password, False)
     # role_obj = keycloak_root_connection.get_realm_role(role)
     # keycloak_root_connection.set_user_role(keycloak_user_id, role_obj)
