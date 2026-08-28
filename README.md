@@ -36,20 +36,18 @@ The server will be running on http://localhost:5521.
 The Swagger documentation is available on the root page.
 
 
-## Development Progress
-#### Overall progress: 
-![](https://geps.dev/progress/66)
+## System Features
 
-#### Tasks:
+#### Implemented in this release:
 - [x] Project Basic Structure (Flask API + Endpoints + kickoff script)
-- [ ] XACML/JSON to the PolicyGraph structure (Structure Builder module)
-- [ ] Map the XACML basic functions over the PolicyGraph (See: https://en.wikipedia.org/wiki/XACML#Functions)
-- [ ] Translate the PolicyGraph to a Solidity Smart Contract (Solidity Policy Builder module)
-- [x] Deploy the Smart Contract and retrieve the address (Blockchain Interface module)
-- [x] Register the Policy address to some database (Policy Address DB)
-- [x] Integrate with the Keycloak Authorization Server (OAuth or MetaMask)
-- [x] Integrate with the [ExtremeXP Portal](https://github.com/ExtremeXP-VU/ExtremeXP-portal)
+- [x] XACML/JSON to Specific Use Cases Policies
+- [x] Register the Policy address to a database (Policy Address DB managed by PAP Smart Contract)
+- [x] Integrate with the Keycloak Authorisation Server (OAuth or MetaMask)
+- [x] Integrate with the [ExtremeXP Portal](https://github.com/extremexp-HORIZON/extremexp-portal)
 - [x] Add the Smart Contracts used for the ABAC module in the project for documentation purposes
+
+#### Future development:
+- [ ] Automated translation of arbitrary XACML policies into Solidity Smart Contracts.
 
 
 ### Tests:
@@ -90,6 +88,6 @@ python3 cli.py -t
 ```
 
 ## Usage
-For a full documentation of the API endpoints, please refer to the pages available at 
+For full documentation of the API endpoints, please refer to the pages available at 
 How to: https://yagorezende.github.io/extremexp_accesscontrol
 Swagger UI: https://yagorezende.github.io/extremexp_accesscontrol/swagger
